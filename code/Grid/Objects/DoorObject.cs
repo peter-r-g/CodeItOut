@@ -26,6 +26,12 @@ public partial class DoorObject : GridObject
 
 	public override bool Use( GridTraverser user, TraverserItem usedItem )
 	{
+		if ( usedItem is null && Open )
+		{
+			Log.Info( "You win!" );
+			return true;
+		}
+		
 		if ( usedItem is not KeyItem key || key.KeyColor != KeyColor )
 			return false;
 
