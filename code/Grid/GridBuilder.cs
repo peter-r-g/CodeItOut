@@ -59,9 +59,9 @@ public class GridBuilder
 		return this;
 	}
 
-	public GridEntity Build()
+	public Grid Build()
 	{
-		var grid = new GridEntity
+		var grid = new Grid
 		{
 			CellSize = _cellSize,
 			Owner = _owner,

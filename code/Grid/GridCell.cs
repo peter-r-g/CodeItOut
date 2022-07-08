@@ -9,7 +9,7 @@ namespace CodeItOut.Grid;
 
 public partial class GridCell : BaseNetworkable
 {
-	[Net] public GridEntity Grid { get; set; }
+	[Net] public Grid Grid { get; set; }
 	[Net] public IntVector2 GridPosition { get; set; }
 	[Net] public IDictionary<Direction, bool> CanMove { get; set; }
 	[Net] public TraverserItem GroundItem { get; set; }
