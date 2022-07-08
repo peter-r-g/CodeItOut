@@ -39,6 +39,17 @@ public class SandScriptMethods
 		pawn.Grid.Traverser.AddAction( TraverserAction.MoveForward );
 	}
 
+	[ScriptMethod( "UseObject" )]
+	[ScriptMethodParameter( 0, "script", typeof(Script) )]
+	[ScriptMethodReturn( typeof(void) )]
+	public static void UseObject( Script script )
+	{
+		if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
+			return;
+		
+		pawn.Grid.Traverser.AddAction( TraverserAction.UseObject );
+	}
+
 	[ScriptMethod( "UseItem" )]
 	[ScriptMethodParameter( 0, "script", typeof(Script) )]
 	[ScriptMethodParameter( 1, "itemIndex", typeof(double) )]
