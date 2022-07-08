@@ -12,6 +12,10 @@ public partial class GridTraverser : GridEntity
 {
 	[Net] public IList<TraverserItem> Items { get; private set; }
 
+	private const float TravelTime = 1f;
+	private IntVector2 _svPreviousGridPosition;
+	private TimeSince _svTimeSinceMoveStart;
+	
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -37,14 +41,22 @@ public partial class GridTraverser : GridEntity
 	{
 		Host.AssertServer();
 		
-		var gridPosition = GridPosition;
-		if ( !Grid.TryGetCellAt( gridPosition.X, gridPosition.Y, out var cellInfo ) )
+		var previousPosition = _svPreviousGridPosition;
+		if ( !Grid.TryGetCellAt( previousPosition.X, previousPosition.Y, out var previousCellInfo ) )
 		{
-			Log.Error( $"Failed to get cell at {gridPosition.X}, {gridPosition.Y}" );
+			Log.Error( $"Failed to get cell at {previousPosition.X}, {previousPosition.Y}" );
 			return;
 		}
 		
-		Position = cellInfo.WorldPositionCenter;
+		var currentPosition = GridPosition;
+		if ( !Grid.TryGetCellAt( currentPosition.X, currentPosition.Y, out var cellInfo ) )
+		{
+			Log.Error( $"Failed to get cell at {currentPosition.X}, {currentPosition.Y}" );
+			return;
+		}
+
+		Position = Vector3.Lerp( previousCellInfo.WorldPositionCenter, cellInfo.WorldPositionCenter,
+			_svTimeSinceMoveStart / TravelTime );
 	}
 
 	private void UpdateRotation()
@@ -98,8 +110,11 @@ public partial class GridTraverser : GridEntity
 		
 		if ( !CurrentGridCell.CanMove[FacingDirection] )
 			return false;
-			
+
+		_svPreviousGridPosition = GridPosition;
 		GridPosition = newGridPosition;
+		_svTimeSinceMoveStart = 0;
+		await GameTask.DelaySeconds( TravelTime + 0.5f );
 		return true;
 	}
 
