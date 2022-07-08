@@ -1,0 +1,11 @@
+﻿Watermark {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+
+    > .title {
+        opacity: 0.5;
+        font-size: 48px;
+        color: white;
+    }
+}

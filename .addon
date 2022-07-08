@@ -1,0 +1,25 @@
+{
+  "Title": "CodeItOut",
+  "Type": "game",
+  "Org": "gunman",
+  "Ident": "codeitout",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "ResourcePaths": null,
+  "HasCode": true,
+  "CodePath": "/code/",
+  "RootNamespace": "CodeItOut",
+  "Metadata": {
+    "MaxPlayers": 0,
+    "MinPlayers": 0,
+    "GameNetworkType": 1,
+    "MapSelect": 4,
+    "MapList": [
+      "facepunch.construct"
+    ],
+    "RankType": 0,
+    "PerMapRanking": false,
+    "LeaderboardType": 0
+  }
+}

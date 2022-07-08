@@ -1,0 +1,10 @@
+# S&Box
+code/*.csproj
+code/obj
+code/Properties
+.intermediate
+_bakeresourcecache
+tools_asset_info.bin
+tools_thumbnail_cache.bin
+*.los
+.vs/
