@@ -69,6 +69,7 @@ public partial class GridCell : BaseNetworkable
 			Direction.Right => Vector3.Lerp( tr, br, 0.5f ),
 			Direction.Down => Vector3.Lerp( bl, br, 0.5f ),
 			Direction.Left => Vector3.Lerp( bl, tl, 0.5f ),
+			Direction.None => WorldPositionCenter,
 			_ => throw new ArgumentOutOfRangeException( nameof(dir), dir, null )
 		};
 	}
