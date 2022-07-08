@@ -30,6 +30,6 @@ public partial class PuzzleGame : Game
 	{
 		Script.Execute( text, out var returnValue );
 		if ( returnValue is not null )
-			(ConsoleSystem.Caller.Pawn as Pawn)?.Grid.Traverser.RunActions();
+			(ConsoleSystem.Caller.Pawn as Pawn)?.Grid.Run();
 	}
 }
