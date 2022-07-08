@@ -12,6 +12,7 @@ public static class DirectionExtension
 			Direction.Right => Direction.Left,
 			Direction.Down => Direction.Up,
 			Direction.Left => Direction.Right,
+			Direction.None => Direction.None,
 			_ => throw new ArgumentOutOfRangeException( nameof(dir), dir, null )
 		};
 	}
@@ -24,6 +25,7 @@ public static class DirectionExtension
 			Direction.Right => IntVector2.Right,
 			Direction.Down => IntVector2.Down,
 			Direction.Left => IntVector2.Left,
+			Direction.None => IntVector2.Zero,
 			_ => throw new ArgumentOutOfRangeException( nameof(dir), dir, null )
 		};
 	}
