@@ -6,7 +6,7 @@ namespace CodeItOut.Grid;
 
 public partial class DoorObject : GridObject
 {
-	public override string ModelName => "models/maya_testcube_100.vmdl";
+	protected override string ModelName => "models/maya_testcube_100.vmdl";
 
 	[Net] public bool Open { get; set; }
 	[Net] public Color KeyColor { get; set; }

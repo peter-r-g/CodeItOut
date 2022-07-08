@@ -2,7 +2,7 @@
 
 public class WallObject : GridObject
 {
-	public override string ModelName => "models/maya_testcube_100.vmdl";
+	protected override string ModelName => "models/maya_testcube_100.vmdl";
 
 	public override void Spawn()
 	{

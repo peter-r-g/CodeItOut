@@ -7,7 +7,7 @@ namespace CodeItOut.Grid;
 
 public partial class GridObject : ModelEntity
 {
-	public virtual string ModelName => "";
+	protected virtual string ModelName => "";
 	
 	[Net] public Direction Direction { get; set; }
 
