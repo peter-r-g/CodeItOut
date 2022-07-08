@@ -50,6 +50,12 @@ public partial class GridCell : BaseNetworkable
 		return Objects.Where( obj => obj.Direction == dir );
 	}
 
+	public void Reset()
+	{
+		foreach ( var obj in Objects )
+			obj.Reset();
+	}
+
 	private Vector3 GetObjectPosition( Direction dir )
 	{
 		var bl = WorldPosition;
