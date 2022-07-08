@@ -29,4 +29,17 @@ public static class DirectionExtension
 			_ => throw new ArgumentOutOfRangeException( nameof(dir), dir, null )
 		};
 	}
+
+	public static Rotation ToRotation( this Direction dir )
+	{
+		return dir switch
+		{
+			Direction.Up => Rotation.From( 0, 90, 0 ),
+			Direction.Right => Rotation.From( 0, 0, 0 ),
+			Direction.Down => Rotation.From( 0, 270, 0 ),
+			Direction.Left => Rotation.From( 0, 180, 0 ),
+			Direction.None => Rotation.From( 0, 0, 0 ),
+			_ => throw new ArgumentOutOfRangeException( nameof(dir), dir, null )
+		};
+	}
 }
