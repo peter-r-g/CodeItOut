@@ -6,9 +6,10 @@ namespace CodeItOut;
 [UseTemplate]
 public class PuzzleGameHud : RootPanel
 {
-	[Event.BuildInput]
-	protected void BuildInput( InputBuilder input )
+	public override void Tick()
 	{
+		base.Tick();
+		
 		var devCam = Local.Client.Components.Get<DevCamera>();
 		SetClass( "active", devCam is null );
 	}
