@@ -29,9 +29,8 @@ public partial class DoorObject : GridObject
 		if ( usedItem is not KeyItem key || key.KeyColor != KeyColor )
 			return false;
 
-		Open = true;
+		Open = !Open;
 		return true;
-
 	}
 
 	public override bool IsObstructing()
