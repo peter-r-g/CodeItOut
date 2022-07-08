@@ -12,6 +12,10 @@ public partial class GridTraverser : GridEntity
 {
 	[Net] public IList<TraverserItem> Items { get; private set; }
 
+	private const float TurnTime = 0.3f;
+	private Direction _svPreviousDirection;
+	private TimeSince _svTimeSinceTurnStart;
+
 	private const float TravelTime = 1f;
 	private IntVector2 _svPreviousGridPosition;
 	private TimeSince _svTimeSinceMoveStart;
@@ -35,6 +39,14 @@ public partial class GridTraverser : GridEntity
 	{
 		UpdatePosition();
 		UpdateRotation();
+	}
+
+	public override void Reset()
+	{
+		base.Reset();
+
+		_svPreviousGridPosition = GridPosition;
+		_svPreviousDirection = FacingDirection;
 	}
 
 	private void UpdatePosition()
@@ -63,15 +75,8 @@ public partial class GridTraverser : GridEntity
 	{
 		Host.AssertServer();
 		
-		Rotation = FacingDirection switch
-		{
-			Direction.Right => Rotation.From( 0, 0, 0 ),
-			Direction.Up => Rotation.From( 0, 90, 0 ),
-			Direction.Left => Rotation.From( 0, 180, 0 ),
-			Direction.Down => Rotation.From( 0, 270, 0 ),
-			Direction.None => Rotation.From( 0, 0, 0 ),
-			_ => throw new ArgumentOutOfRangeException()
-		};
+		Rotation = Rotation.Lerp( _svPreviousDirection.ToRotation(), FacingDirection.ToRotation(),
+			_svTimeSinceTurnStart / TurnTime );
 	}
 	
 	protected override async Task<bool> TurnLeft()
@@ -82,7 +87,10 @@ public partial class GridTraverser : GridEntity
 		if ( newValue < (byte)Direction.Up )
 			newValue = (byte)Direction.Left;
 
+		_svPreviousDirection = FacingDirection;
 		FacingDirection = (Direction)newValue;
+		_svTimeSinceTurnStart = 0;
+		await GameTask.DelaySeconds( TurnTime + 0.5f );
 		return true;
 	}
 
@@ -93,8 +101,11 @@ public partial class GridTraverser : GridEntity
 		var newValue = (byte)FacingDirection + 1;
 		if ( newValue > (byte)Direction.Left )
 			newValue = (byte)Direction.Up;
-		
+
+		_svPreviousDirection = FacingDirection;
 		FacingDirection = (Direction)newValue;
+		_svTimeSinceTurnStart = 0;
+		await GameTask.DelaySeconds( TurnTime + 0.5f );
 		return true;
 	}
 
