@@ -2,24 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeItOut.Items;
+using CodeItOut.UI;
 using CodeItOut.Utility;
 using Sandbox;
 
 namespace CodeItOut.Grid.Traverser;
 
-public partial class GridTraverser : AnimatedEntity
+public partial class GridTraverser : GridEntity
 {
-	[Net] public GridEntity Grid { get; set; }
-	[Net] public IntVector2 GridPosition { get; set; }
-	[Net] public Direction FacingDirection { get; set; } = Direction.Up;
 	[Net] public IList<TraverserItem> Items { get; private set; }
-
-	public GridCell CurrentGridCell
-	{
-		get => Grid.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) ? cellInfo : null;
-	}
-
-	private readonly List<(TraverserAction, object[])> _svActions = new();
 
 	public override void Spawn()
 	{
@@ -28,90 +19,18 @@ public partial class GridTraverser : AnimatedEntity
 		SetModel( "models/citizen/citizen.vmdl" );
 	}
 
+	public override void ClientSpawn()
+	{
+		base.ClientSpawn();
+
+		TraverserHud.Instance.Traverser = this;
+	}
+
 	[Event.Tick.Server]
 	protected void Tick()
 	{
 		UpdatePosition();
 		UpdateRotation();
-
-		DebugOverlay.Line( Position, Position + new Vector3( FacingDirection.ToPosition() * 100, 0 ), Color.Magenta, 0.1f );
-	}
-
-	public void Reset()
-	{
-		Host.AssertServer();
-		
-		GridPosition = Grid.StartPosition;
-		FacingDirection = Direction.Up;
-		_svActions.Clear();
-	}
-
-	public void AddAction( TraverserAction action, params object[] args )
-	{
-		Host.AssertServer();
-		_svActions.Add( (action, args) );
-	}
-
-	public async Task RunActions()
-	{
-		Host.AssertServer();
-		
-		foreach ( var action in _svActions )
-		{
-			switch ( action.Item1 )
-			{
-				case TraverserAction.MoveForward:
-					if ( !MoveForward() )
-					{
-						await End();
-						return;
-					}
-					
-					break;
-				case TraverserAction.TurnLeft:
-					TurnLeft();
-					break;
-				case TraverserAction.TurnRight:
-					TurnRight();
-					break;
-				case TraverserAction.UseItem:
-					if ( !UseItem( (double)action.Item2[0] ) )
-					{
-						await End();
-						return;
-					}
-					
-					break;
-				case TraverserAction.PickupItem:
-					if ( !PickupItem() )
-					{
-						await End();
-						return;
-					}
-					
-					break;
-				case TraverserAction.DropItem:
-					if ( !DropItem( (double)action.Item2[0] ) )
-					{
-						await End();
-						return;
-					}
-					
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-
-			await GameTask.DelaySeconds( 0.5f );
-		}
-
-		await End();
-	}
-
-	private async Task End()
-	{
-		await GameTask.DelaySeconds( 2 );
-		Grid.Reset();
 	}
 
 	private void UpdatePosition()
@@ -138,11 +57,12 @@ public partial class GridTraverser : AnimatedEntity
 			Direction.Up => Rotation.From( 0, 90, 0 ),
 			Direction.Left => Rotation.From( 0, 180, 0 ),
 			Direction.Down => Rotation.From( 0, 270, 0 ),
+			Direction.None => Rotation.From( 0, 0, 0 ),
 			_ => throw new ArgumentOutOfRangeException()
 		};
 	}
 	
-	private void TurnLeft()
+	protected override async Task<bool> TurnLeft()
 	{
 		Host.AssertServer();
 
@@ -151,9 +71,10 @@ public partial class GridTraverser : AnimatedEntity
 			newValue = (byte)Direction.Left;
 
 		FacingDirection = (Direction)newValue;
+		return true;
 	}
 
-	private void TurnRight()
+	protected override async Task<bool> TurnRight()
 	{
 		Host.AssertServer();
 		
@@ -162,9 +83,10 @@ public partial class GridTraverser : AnimatedEntity
 			newValue = (byte)Direction.Up;
 		
 		FacingDirection = (Direction)newValue;
+		return true;
 	}
 
-	private bool MoveForward()
+	protected override async Task<bool> MoveForward()
 	{
 		Host.AssertServer();
 		
@@ -181,7 +103,24 @@ public partial class GridTraverser : AnimatedEntity
 		return true;
 	}
 
-	private bool UseItem( double itemIndex )
+	protected override async Task<bool> UseObject()
+	{
+		Host.AssertServer();
+
+		var cellInfo = CurrentGridCell;
+		if ( cellInfo is null )
+			return false;
+		
+		foreach ( var obj in cellInfo.GetObjectsInDirection( FacingDirection ) )
+		{
+			if ( obj.Use( this, null ) )
+				return true;
+		}
+
+		return false;
+	}
+
+	protected override async Task<bool> UseItem( double itemIndex )
 	{
 		Host.AssertServer();
 
@@ -201,7 +140,7 @@ public partial class GridTraverser : AnimatedEntity
 		return false;
 	}
 
-	private bool PickupItem()
+	protected override async Task<bool> PickupItem()
 	{
 		Host.AssertServer();
 
@@ -216,7 +155,7 @@ public partial class GridTraverser : AnimatedEntity
 		return true;
 	}
 
-	private bool DropItem( double itemIndex )
+	protected override async Task<bool> DropItem( double itemIndex )
 	{
 		Host.AssertServer();
 

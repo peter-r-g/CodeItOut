@@ -5,7 +5,7 @@ namespace CodeItOut.Items;
 public partial class KeyItem : TraverserItem
 {
 	public override string ItemName => "Key";
-	public override string ModelPath => "models/citizen_props/crowbar01.vmdl";
+	protected override string ModelPath => "models/citizen_props/crowbar01.vmdl";
 	
 	[Net] public Color KeyColor { get; set; }
 

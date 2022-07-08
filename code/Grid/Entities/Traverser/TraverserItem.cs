@@ -7,7 +7,7 @@ namespace CodeItOut.Items;
 public class TraverserItem : ModelEntity
 {
 	public virtual string ItemName => "";
-	public virtual string ModelPath => "";
+	protected virtual string ModelPath => "";
 
 	private GridTraverser _svHolder;
 	private GridCell _svCurrentGridCell;
