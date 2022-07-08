@@ -1,6 +1,5 @@
 ﻿using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
-using CodeItOut.Utility;
 using Sandbox;
 
 namespace CodeItOut.Grid;
@@ -8,6 +7,7 @@ namespace CodeItOut.Grid;
 public partial class GridObject : ModelEntity
 {
 	protected virtual string ModelName => "";
+	public virtual Vector3 Offset => Vector3.Zero;
 	
 	[Net] public Direction Direction { get; set; }
 

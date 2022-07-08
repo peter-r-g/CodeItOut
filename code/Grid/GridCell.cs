@@ -42,7 +42,7 @@ public partial class GridCell : BaseNetworkable
 
 		Objects.Add( obj );
 		obj.Direction = dir;
-		obj.Position = GetObjectPosition( dir );
+		obj.Position = GetObjectPosition( dir ) + obj.Offset;
 	}
 
 	public IEnumerable<GridObject> GetObjectsInDirection( Direction dir )
