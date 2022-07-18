@@ -11,35 +11,7 @@ public partial class Pawn : Player
 	{
 		base.Spawn();
 
-		Grid = new GridBuilder()
-			.WithOwner( this )
-			.WithWorldPosition( Vector3.Zero )
-			.WithSize( 1, 5 )
-			.WithStartPosition( 0, 0 )
-			.WithCellSize( 100, 100 )
-			.Build();
-
-		var floorColor = Color.White;
-		for ( var x = 0; x < Grid.Size.X; x++ )
-		{
-			for ( var y = 0; y < Grid.Size.Y; y++ )
-			{
-				var floor = new FloorObject {RenderColor = floorColor};
-				Grid.PlaceObjectAt( x, y, Direction.None, floor );
-				floorColor = floorColor == Color.White ? Color.Magenta : Color.White;
-			}
-		}
-
-		Grid.AddItemTo( 0, 2, new KeyItem {KeyColor = Color.Green} );
-
-		Grid.PlaceObjectAt( 0, 0, Direction.Down, new WallObject() );
-		for ( var i = 0; i < 5; i++ )
-		{
-			Grid.PlaceObjectAt( 0, i, Direction.Left, new WallObject() );
-			Grid.PlaceObjectAt( 0, i, Direction.Right, new WallObject() );
-		}
-
-		Grid.PlaceObjectAt( 0, 4, Direction.Up, new DoorObject {KeyColor = Color.Green} );
+		Map = GridMap.Load( FileSystem.Mounted, "code/Maps/test.s&s" );
 
 		Animator = null;
 		CameraMode = new LookAtCamera

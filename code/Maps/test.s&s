@@ -1,0 +1,92 @@
+﻿/*
+    Helper function to place all walls for a grid location.
+*/
+void PlaceWalls( number x, number y, bool up, bool down, bool left, bool right )
+{
+    if ( up )
+        PlaceWall( x, y, "up" );
+    
+    if ( down )
+        PlaceWall( x, y, "down" );
+        
+    if ( left )
+        PlaceWall( x, y, "left" );
+        
+    if ( right )
+        PlaceWall( x, y, "right" );
+}
+
+/*
+    Places two walls in a corner shape.
+*/
+void PlaceCorner( number x, number y, string corner )
+{
+    if ( corner == "tl" )
+        PlaceWalls( x, y, true, false, true, false );
+    else if ( corner == "tr" )
+        PlaceWalls( x, y, true, false, false, true );
+    else if ( corner == "bl" )
+        PlaceWalls( x, y, false, true, true, false );
+    else if ( corner == "br" )
+        PlaceWalls( x, y, false, true, false, true );
+}
+
+/*
+    Places a horizontal hallway from start position to the ending X.
+*/
+void PlaceHorizontalHallway( number x, number y, number xOffset )
+{
+    for ( var currentX = x; currentX < x + xOffset; currentX += 1 )
+        PlaceWalls( currentX, y, true, true, false, false );
+}
+
+/*
+    Places a vertical hallway from start position to the ending Y.
+*/
+void PlaceVerticalHallway( number x, number y, number yOffset )
+{
+    for ( var currentY = y; currentY < y + yOffset; currentY += 1 )
+        PlaceWalls( x, currentY, false, false, true, true );
+}
+
+/*
+    Main method to build the map.
+*/
+void Main()
+{
+    // Map setup.
+    SetSize( 5, 5 );
+    SetCellSize( 100, 100 );
+    SetStartPosition( 0, 0 );
+    
+    // Place floors everywhere.
+    for ( var x = 0; x < 5; x += 1 )
+        for ( var y = 0; y < 5; y += 1 )
+            PlaceFloor( x, y );
+    
+    // Start location.
+    PlaceWalls( 0, 0, false, true, true, true );
+    
+    // First hallway.
+    PlaceCorner( 0, 1, "tl" );
+    PlaceHorizontalHallway( 1, 1, 3 );
+    
+    // Second hallway.
+    PlaceCorner( 4, 1, "br" );
+    PlaceWalls( 4, 2, false, false, true, true );
+    
+    // Third hallway.
+    PlaceCorner( 4, 3, "tr" );
+    PlaceHorizontalHallway( 1, 3, 3 );
+    
+    // Fourth hallway.
+    PlaceCorner( 0, 3, "bl" );
+    PlaceWalls( 0, 4, false, false, true, true );
+    
+    // Key items
+    PlaceKey( 4, 2 );
+    PlaceLockedExit( 0, 4, "up" );
+}
+
+// Call the main method.
+Main();
