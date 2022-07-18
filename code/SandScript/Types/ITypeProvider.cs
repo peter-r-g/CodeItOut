@@ -10,9 +10,9 @@ public interface ITypeProvider
 	
 	Type BackingType { get; }
 	
-	Dictionary<TokenType, Func<object, object, object>> BinaryOperations { get; }
-	Dictionary<TokenType, Func<object, object>> UnaryOperations { get; }
+	Dictionary<TokenType, Func<object?, object?, object?>> BinaryOperations { get; }
+	Dictionary<TokenType, Func<object?, object?>> UnaryOperations { get; }
 
-	bool Compare( object left, object right );
-	object CreateDefault();
+	bool Compare( object? left, object? right );
+	object? CreateDefault();
 }

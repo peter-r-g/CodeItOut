@@ -20,7 +20,7 @@ public sealed class Token : IEquatable<Token>
 		Location = location;
 	}
 
-	public bool Equals( Token other )
+	public bool Equals( Token? other )
 	{
 		if ( other is null )
 			return false;
@@ -28,7 +28,7 @@ public sealed class Token : IEquatable<Token>
 		return Type == other.Type && Value.Equals( other.Value ) && Location.Equals( other.Location );
 	}
 
-	public override bool Equals( object obj )
+	public override bool Equals( object? obj )
 	{
 		return obj is Token other && Equals( other );
 	}

@@ -53,7 +53,7 @@ public class ScriptMethod : IEquatable<ScriptMethod>
 		Signature = MethodSignature.From( this );
 	}
 
-	public object Invoke( Interpreter interpreter, object[] values )
+	public object? Invoke( Interpreter interpreter, object?[] values )
 	{
 		if ( _isCsMethod )
 		{
@@ -88,7 +88,7 @@ public class ScriptMethod : IEquatable<ScriptMethod>
 		}
 	}
 
-	public bool Equals( ScriptMethod other )
+	public bool Equals( ScriptMethod? other )
 	{
 		if ( ReferenceEquals( null, other ) )
 			return false;
@@ -99,7 +99,7 @@ public class ScriptMethod : IEquatable<ScriptMethod>
 		return ReturnTypeProvider == other.ReturnTypeProvider && Signature.Equals( other.Signature );
 	}
 
-	public override bool Equals( object obj )
+	public override bool Equals( object? obj )
 	{
 		if ( ReferenceEquals( null, obj ) )
 			return false;

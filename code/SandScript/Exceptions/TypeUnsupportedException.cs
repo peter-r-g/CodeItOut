@@ -4,7 +4,7 @@ namespace SandScript.Exceptions;
 
 public sealed class TypeUnsupportedException : Exception
 {
-	public readonly Type UnsupportedType;
+	public readonly Type? UnsupportedType;
 	public readonly string UnsupportedTypeIdentifier;
 
 	public TypeUnsupportedException( Type type ) : base( "The type \"" + type + "\" is unsupported" )

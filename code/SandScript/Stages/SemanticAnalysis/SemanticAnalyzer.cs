@@ -5,7 +5,7 @@ namespace SandScript;
 
 public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 {
-	private readonly Script _owner;
+	private readonly Script? _owner;
 	
 	internal readonly VariableManager<string, ITypeProvider> VariableTypes = new(null);
 	internal readonly VariableManager<MethodSignature, ScriptMethod> VariableMethods =
@@ -15,6 +15,11 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 	internal readonly SemanticAnalyzerDiagnostics Diagnostics = new();
 	
 	private readonly TypeCheckStack _neededTypes = new();
+
+	internal SemanticAnalyzer()
+	{
+		_owner = null;
+	}
 
 	internal SemanticAnalyzer( Script owner )
 	{
@@ -32,6 +37,9 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 
 	~SemanticAnalyzer()
 	{
+		if ( _owner is null )
+			return;
+		
 		_owner.MethodAdded -= OwnerOnMethodAdded;
 		_owner.VariableAdded -= OwnerOnVariableAdded;
 	}
@@ -65,7 +73,7 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 		return result;
 	}
 
-	private bool VerifyTypeLoose( ITypeProvider type, [NotNullWhen( false )] out ITypeProvider expectedType )
+	private bool VerifyTypeLoose( ITypeProvider type, [NotNullWhen( false )] out ITypeProvider? expectedType )
 	{
 		return _neededTypes.AssertTypeCheckLoose( type, out expectedType );
 	}
@@ -347,7 +355,7 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 	public static bool Analyze( Ast ast ) => Analyze( ast, out _ );
 	public static bool Analyze( Ast ast, out StageDiagnostics diagnostics )
 	{
-		var analyzer = new SemanticAnalyzer( null! );
+		var analyzer = new SemanticAnalyzer();
 		var result = analyzer.AnalyzeAst( ast );
 		diagnostics = analyzer.Diagnostics;
 

@@ -17,7 +17,7 @@ internal class TypeCheckStack
 		_typeStack.Pop();
 	}
 	
-	public bool AssertTypeCheckLoose( ITypeProvider type, [NotNullWhen(false)] out ITypeProvider expectedType )
+	public bool AssertTypeCheckLoose( ITypeProvider type, [NotNullWhen(false)] out ITypeProvider? expectedType )
 	{
 		if ( !_typeStack.TryPeek( out expectedType ) )
 			return true;

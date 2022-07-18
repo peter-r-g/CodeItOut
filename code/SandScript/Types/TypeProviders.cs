@@ -26,7 +26,7 @@ public static class TypeProviders
 		return Types;
 	}
 
-	public static ITypeProvider Get<T>() where T : ITypeProvider
+	public static ITypeProvider? Get<T>() where T : ITypeProvider
 	{
 		foreach ( var provider in Types )
 		{
@@ -37,7 +37,7 @@ public static class TypeProviders
 		return null;
 	}
 
-	public static ITypeProvider GetByName( string name )
+	public static ITypeProvider? GetByName( string name )
 	{
 		foreach ( var type in Types )
 		{
@@ -48,7 +48,7 @@ public static class TypeProviders
 		return null;
 	}
 
-	public static ITypeProvider GetByIdentifier( string identifier )
+	public static ITypeProvider? GetByIdentifier( string identifier )
 	{
 		foreach ( var type in Types )
 		{
@@ -59,7 +59,7 @@ public static class TypeProviders
 		return null;
 	}
 
-	public static ITypeProvider GetByBackingType( Type backingType )
+	public static ITypeProvider? GetByBackingType( Type backingType )
 	{
 		if ( backingType == typeof(ScriptValue) )
 			return Builtin.Variable;
@@ -73,7 +73,7 @@ public static class TypeProviders
 		return null;
 	}
 
-	public static ITypeProvider GetByValue( object value )
+	public static ITypeProvider? GetByValue( object? value )
 	{
 		return value is null ? Builtin.Nothing : GetByBackingType( value.GetType() );
 	}

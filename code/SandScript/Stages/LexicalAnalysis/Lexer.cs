@@ -165,7 +165,7 @@ public sealed class Lexer
 	    return new Token( TokenType.MultiLineComment, comment, row, column );
     }
 
-    private bool TryGetLiteral( [NotNullWhen( true )] out Token token )
+    private bool TryGetLiteral( [NotNullWhen( true )] out Token? token )
     {
 	    foreach ( var typeProvider in TypeProviders.GetAll() )
 	    {
@@ -201,7 +201,7 @@ public sealed class Lexer
 		    : new Token( TokenType.Identifier, str, row, column );
     }
 
-    private bool TryGetMiscToken( int numCharacters, [NotNullWhen(true)] out Token token )
+    private bool TryGetMiscToken( int numCharacters, [NotNullWhen(true)] out Token? token )
     {
 	    if ( IsCurrentEof )
 	    {

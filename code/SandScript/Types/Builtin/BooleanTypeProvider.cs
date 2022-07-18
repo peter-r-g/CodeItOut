@@ -11,7 +11,7 @@ public sealed class BooleanTypeProvider : ILiteralTypeProvider
 
 	public Type BackingType => typeof(bool);
 
-	public Dictionary<TokenType, Func<object, object, object>> BinaryOperations { get; } = new()
+	public Dictionary<TokenType, Func<object?, object?, object?>> BinaryOperations { get; } = new()
 	{
 		{TokenType.AmpersandAmpersand, And},
 		{TokenType.PipePipe, Or},
@@ -19,12 +19,12 @@ public sealed class BooleanTypeProvider : ILiteralTypeProvider
 		{TokenType.BangEquals, BinNotEquals}
 	};
 
-	public Dictionary<TokenType, Func<object, object>> UnaryOperations { get; } = new()
+	public Dictionary<TokenType, Func<object?, object?>> UnaryOperations { get; } = new()
 	{
 		{TokenType.Bang, Flip}
 	};
 
-	public bool Compare( object left, object right )
+	public bool Compare( object? left, object? right )
 	{
 		return (bool)left! == (bool)right!;
 	}
@@ -34,7 +34,7 @@ public sealed class BooleanTypeProvider : ILiteralTypeProvider
 		return default(bool);
 	}
 
-	public object GetLiteral( Lexer lexer )
+	public object? GetLiteral( Lexer lexer )
 	{
 		switch (lexer.CurrentChar)
 		{
@@ -59,7 +59,7 @@ public sealed class BooleanTypeProvider : ILiteralTypeProvider
 		return null;
 	}
 
-	public LiteralAst GetLiteralAst( Token token )
+	public LiteralAst? GetLiteralAst( Token token )
 	{
 		return token.Value is bool ? new LiteralAst( token, this ) : null;
 	}
@@ -69,27 +69,27 @@ public sealed class BooleanTypeProvider : ILiteralTypeProvider
 		return TypeName;
 	}
 
-	private static object And( object left, object right )
+	private static object And( object? left, object? right )
 	{
 		return (bool)left! && (bool)right!;
 	}
 
-	private static object Or( object left, object right )
+	private static object Or( object? left, object? right )
 	{
 		return (bool)left! || (bool)right!;
 	}
 
-	private static object Flip( object operand )
+	private static object? Flip( object? operand )
 	{
 		return !(bool)operand!;
 	}
 
-	private static object BinEquals( object left, object right )
+	private static object? BinEquals( object? left, object? right )
 	{
 		return (bool)left! == (bool)right!;
 	}
 
-	private static object BinNotEquals( object left, object right )
+	private static object? BinNotEquals( object? left, object? right )
 	{
 		return !(bool)BinEquals( left, right )!;
 	}

@@ -118,12 +118,12 @@ public class Script
 		Interpreter.MethodVariables.Root.Add( methodSignature, value );
 	}
 
-	public ScriptValue Call( ScriptMethod method, params object[] args )
+	public ScriptValue Call( ScriptMethod method, params object?[] args )
 	{
 		return ScriptValue.From( method.Invoke( Interpreter, args ) );
 	}
 
-	public ScriptValue Call( ScriptValue sv, params object[] args )
+	public ScriptValue Call( ScriptValue sv, params object?[] args )
 	{
 		if ( sv.TypeProvider != TypeProviders.Builtin.Method )
 			throw new TypeMismatchException( TypeProviders.Builtin.Method, sv.TypeProvider );
@@ -131,8 +131,8 @@ public class Script
 		return ScriptValue.From( ((ScriptMethod)sv.Value!).Invoke( Interpreter, args ) );
 	}
 
-	public ScriptValue Execute( string text ) => Execute( text, out ScriptDiagnostics _ );
-	public ScriptValue Execute( string text, out ScriptDiagnostics diagnostics )
+	public ScriptValue? Execute( string text ) => Execute( text, out ScriptDiagnostics _ );
+	public ScriptValue? Execute( string text, out ScriptDiagnostics diagnostics )
 	{
 		diagnostics = new ScriptDiagnostics();
 		
@@ -159,9 +159,9 @@ public class Script
 		return ScriptValue.From( result );
 	}
 
-	public static Script Execute( string text, out ScriptValue returnValue ) =>
+	public static Script Execute( string text, out ScriptValue? returnValue ) =>
 		Execute( text, out returnValue, out _ );
-	public static Script Execute( string text, out ScriptValue returnValue, out ScriptDiagnostics diagnostics )
+	public static Script Execute( string text, out ScriptValue? returnValue, out ScriptDiagnostics diagnostics )
 	{
 		var script = new Script();
 		returnValue = script.Execute( text, out diagnostics );

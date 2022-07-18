@@ -40,7 +40,7 @@ public class MethodSignature : IEquatable<MethodSignature>
 		return _name + '(' + StringifyTypes() + ')';
 	}
 
-	public bool Equals( MethodSignature other )
+	public bool Equals( MethodSignature? other )
 	{
 		if ( other is null )
 			return false;
@@ -66,7 +66,7 @@ public class MethodSignature : IEquatable<MethodSignature>
 		return true;
 	}
 
-	public override bool Equals( object obj )
+	public override bool Equals( object? obj )
 	{
 		if ( ReferenceEquals( null, obj ) )
 			return false;

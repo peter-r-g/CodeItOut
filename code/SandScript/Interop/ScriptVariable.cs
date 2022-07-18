@@ -23,12 +23,12 @@ public sealed class ScriptVariable
 		_property = propertyInfo;
 	}
 
-	public object GetValue()
+	public object? GetValue()
 	{
 		return _property.GetValue( null );
 	}
 
-	public void SetValue( object value )
+	public void SetValue( object? value )
 	{
 		_property.SetValue( null, value );
 	}

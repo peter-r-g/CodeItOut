@@ -10,15 +10,15 @@ public sealed class MethodTypeProvider : ITypeProvider
 	
 	public Type BackingType => typeof(ScriptMethod);
 	
-	public Dictionary<TokenType, Func<object, object, object>> BinaryOperations { get; } = new();
-	public Dictionary<TokenType, Func<object, object>> UnaryOperations { get; } = new();
+	public Dictionary<TokenType, Func<object?, object?, object?>> BinaryOperations { get; } = new();
+	public Dictionary<TokenType, Func<object?, object?>> UnaryOperations { get; } = new();
 
-	public bool Compare( object left, object right )
+	public bool Compare( object? left, object? right )
 	{
 		return ((ScriptMethod)left!).Signature.Equals( ((ScriptMethod)right!).Signature );
 	}
 
-	public object CreateDefault()
+	public object? CreateDefault()
 	{
 		return null;
 	}

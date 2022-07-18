@@ -3,12 +3,12 @@ using SandScript.AbstractSyntaxTrees;
 
 namespace SandScript;
 
-public sealed class Interpreter : NodeVisitor<object>
+public sealed class Interpreter : NodeVisitor<object?>
 {
 	internal readonly Script Owner;
 
-	internal readonly VariableManager<string, object> Variables = new(null);
-	internal readonly VariableManager<MethodSignature, object> MethodVariables =
+	internal readonly VariableManager<string, object?> Variables = new(null);
+	internal readonly VariableManager<MethodSignature, object?> MethodVariables =
 		new(new IgnoreHashCodeComparer<MethodSignature>());
 	
 	internal readonly InterpreterDiagnostics Diagnostics = new();
@@ -47,12 +47,12 @@ public sealed class Interpreter : NodeVisitor<object>
 		Variables.Root.Add( variable.Name, variable );
 	}
 
-	public object Interpret( Ast ast )
+	public object? Interpret( Ast ast )
 	{
 		return Visit( ast );
 	}
 
-	protected override object VisitProgram( ProgramAst programAst )
+	protected override object? VisitProgram( ProgramAst programAst )
 	{
 		foreach ( var statement in programAst.Statements )
 		{
@@ -67,7 +67,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return null;
 	}
 
-	protected override object VisitBlock( BlockAst blockAst )
+	protected override object? VisitBlock( BlockAst blockAst )
 	{
 		var guid = blockAst.Guid;
 		using var scope = Variables.Enter( guid );
@@ -85,18 +85,18 @@ public sealed class Interpreter : NodeVisitor<object>
 		return null;
 	}
 	
-	protected override object VisitReturn( ReturnAst returnAst )
+	protected override object? VisitReturn( ReturnAst returnAst )
 	{
 		Returning = true;
 		return Visit( returnAst.ExpressionAst );
 	}
 	
-	protected override object VisitAssignment( AssignmentAst assignmentAst )
+	protected override object? VisitAssignment( AssignmentAst assignmentAst )
 	{
 		var variableName = assignmentAst.VariableAst.VariableName;
 		Variables.Current.TryGetValue( variableName, out var value, out var container );
 
-		object newValue;
+		object? newValue;
 		if ( assignmentAst.Operator.Type == TokenType.Equals )
 		{
 			newValue = Visit( assignmentAst.ExpressionAst );
@@ -116,7 +116,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return null;
 	}
 
-	protected override object VisitBinaryOperator( BinaryOperatorAst binaryOperatorAst )
+	protected override object? VisitBinaryOperator( BinaryOperatorAst binaryOperatorAst )
 	{
 		var left = Visit( binaryOperatorAst.LeftAst );
 		var operation = TypeProviders.GetByValue( left )!.BinaryOperations[binaryOperatorAst.Operator.Type];
@@ -124,7 +124,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return operation( left, Visit( binaryOperatorAst.RightAst ) );
 	}
 
-	protected override object VisitUnaryOperator( UnaryOperatorAst unaryOperatorAst )
+	protected override object? VisitUnaryOperator( UnaryOperatorAst unaryOperatorAst )
 	{
 		var operand = Visit( unaryOperatorAst.OperandAst );
 		var operation = TypeProviders.GetByValue( operand )!.UnaryOperations[unaryOperatorAst.Operator.Type];
@@ -132,7 +132,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return operation( operand );
 	}
 
-	protected override object VisitIf( IfAst ifAst )
+	protected override object? VisitIf( IfAst ifAst )
 	{
 		if ( (bool)Visit( ifAst.BooleanExpressionAst )! )
 			return Visit( ifAst.TrueBodyAst );
@@ -140,7 +140,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return Visit( ifAst.FalseBodyAst );
 	}
 
-	protected override object VisitFor( ForAst forAst )
+	protected override object? VisitFor( ForAst forAst )
 	{
 		using var scope = Variables.Enter( forAst.Guid );
 		using var scope2 = MethodVariables.Enter( forAst.Guid );
@@ -157,7 +157,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return null;
 	}
 
-	protected override object VisitWhile( WhileAst whileAst )
+	protected override object? VisitWhile( WhileAst whileAst )
 	{
 		while ( (bool)Visit( whileAst.BooleanExpressionAst )! )
 		{
@@ -169,7 +169,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return null;
 	}
 
-	protected override object VisitDoWhile( DoWhileAst doWhileAst )
+	protected override object? VisitDoWhile( DoWhileAst doWhileAst )
 	{
 		do
 		{
@@ -181,7 +181,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return null;
 	}
 
-	protected override object VisitMethodDeclaration( MethodDeclarationAst methodDeclarationAst )
+	protected override object? VisitMethodDeclaration( MethodDeclarationAst methodDeclarationAst )
 	{
 		var method = new ScriptMethod( methodDeclarationAst );
 		var methodSignature = MethodSignature.From( method );
@@ -192,11 +192,11 @@ public sealed class Interpreter : NodeVisitor<object>
 		return null;
 	}
 	
-	protected override object VisitMethodCall( MethodCallAst methodCallAst )
+	protected override object? VisitMethodCall( MethodCallAst methodCallAst )
 	{
 		MethodVariables.Current.TryGetValue( MethodSignature.From( methodCallAst ), out var variable );
 
-		var arguments = new object[methodCallAst.ArgumentAsts.Length];
+		var arguments = new object?[methodCallAst.ArgumentAsts.Length];
 		for ( var i = 0; i < methodCallAst.ArgumentAsts.Length; i++ )
 			arguments[i] = Visit( methodCallAst.ArgumentAsts[i] );
 		
@@ -208,7 +208,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		throw new NotImplementedException();
 	}
 
-	protected override object VisitVariableDeclaration( VariableDeclarationAst variableDeclarationAst )
+	protected override object? VisitVariableDeclaration( VariableDeclarationAst variableDeclarationAst )
 	{
 		var defaultValue = Visit( variableDeclarationAst.DefaultExpressionAst ) ??
 		                   variableDeclarationAst.VariableTypeAst.TypeProvider.CreateDefault();
@@ -219,7 +219,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return null;
 	}
 
-	protected override object VisitVariable( VariableAst variableAst )
+	protected override object? VisitVariable( VariableAst variableAst )
 	{
 		Variables.Current.TryGetValue( variableAst.VariableName, out var variable );
 		return variable is ScriptVariable sv ? sv.GetValue() : variable;
@@ -235,7 +235,7 @@ public sealed class Interpreter : NodeVisitor<object>
 		return literalAst.Value;
 	}
 
-	protected override object VisitNoOperation( NoOperationAst noOperationAst )
+	protected override object? VisitNoOperation( NoOperationAst noOperationAst )
 	{
 		return null;
 	}

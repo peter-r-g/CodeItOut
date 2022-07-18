@@ -8,7 +8,7 @@ public sealed class ScriptValue
 	public readonly Type Type;
 	public readonly ITypeProvider TypeProvider;
 
-	public object Value
+	public object? Value
 	{
 		get
 		{
@@ -19,9 +19,9 @@ public sealed class ScriptValue
 		}
 	}
 
-	private readonly object _value;
+	private readonly object? _value;
 
-	public ScriptValue( object value )
+	public ScriptValue( object? value )
 	{
 		if ( value is ScriptVariable variable )
 		{
@@ -42,7 +42,7 @@ public sealed class ScriptValue
 		return Type == other.Type && TypeProvider.Compare( Value, other.Value );
 	}
 
-	public override bool Equals( object obj )
+	public override bool Equals( object? obj )
 	{
 		if ( ReferenceEquals( null, obj ) )
 			return false;
@@ -73,7 +73,7 @@ public sealed class ScriptValue
 			case ScriptValue sv:
 				return sv;
 		}
-
+		
 		var provider = TypeProviders.GetByValue( value );
 		if ( provider is not null )
 			return new ScriptValue( value );

@@ -7,7 +7,7 @@ namespace SandScript;
 
 public class VariableContainer<TKey, TValue> : IDictionary<TKey, TValue> where TKey : notnull
 {
-	public VariableContainer<TKey, TValue> Parent { get; }
+	public VariableContainer<TKey, TValue>? Parent { get; }
 	public IReadOnlyDictionary<Guid, VariableContainer<TKey, TValue>> Children => _children;
 	
 	public Guid Guid { get; }
@@ -26,10 +26,10 @@ public class VariableContainer<TKey, TValue> : IDictionary<TKey, TValue> where T
 
 	private readonly Dictionary<Guid, VariableContainer<TKey, TValue>> _children;
 	private readonly Dictionary<TKey, TValue> _variables;
-	private readonly IEqualityComparer<TKey> _comparer;
+	private readonly IEqualityComparer<TKey>? _comparer;
 
-	public VariableContainer( Guid guid, VariableContainer<TKey, TValue> parent,
-		IEnumerable<KeyValuePair<TKey, TValue>> startVariables, IEqualityComparer<TKey> comparer )
+	public VariableContainer( Guid guid, VariableContainer<TKey, TValue>? parent,
+		IEnumerable<KeyValuePair<TKey, TValue>>? startVariables, IEqualityComparer<TKey>? comparer )
 	{
 		Parent = parent;
 		Guid = guid;
@@ -41,7 +41,7 @@ public class VariableContainer<TKey, TValue> : IDictionary<TKey, TValue> where T
 			: new Dictionary<TKey, TValue>( comparer );
 	}
 
-	public VariableContainer<TKey, TValue> AddChild( Guid guid, IEnumerable<KeyValuePair<TKey, TValue>> startVariables )
+	public VariableContainer<TKey, TValue> AddChild( Guid guid, IEnumerable<KeyValuePair<TKey, TValue>>? startVariables )
 	{
 		var container = new VariableContainer<TKey, TValue>( guid, this, startVariables, _comparer );
 		_children.Add( guid, container );
@@ -94,7 +94,7 @@ public class VariableContainer<TKey, TValue> : IDictionary<TKey, TValue> where T
 
 	public bool ContainsKey( TKey key ) => ContainsKey( key, true, out _ );
 	public bool ContainsKey( TKey key, bool recursive ) => ContainsKey( key, recursive, out _ );
-	public bool ContainsKey( TKey key, bool recursive, [NotNullWhen( true )] out VariableContainer<TKey, TValue> container )
+	public bool ContainsKey( TKey key, bool recursive, [NotNullWhen( true )] out VariableContainer<TKey, TValue>? container )
 	{
 		if ( _variables.ContainsKey( key ) )
 		{

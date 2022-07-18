@@ -10,10 +10,10 @@ public sealed class VariableTypeProvider : ITypeProvider
 	
 	public Type BackingType => typeof(object);
 	
-	public Dictionary<TokenType, Func<object, object, object>> BinaryOperations { get; } = new();
-	public Dictionary<TokenType, Func<object, object>> UnaryOperations { get; } = new();
+	public Dictionary<TokenType, Func<object?, object?, object?>> BinaryOperations { get; } = new();
+	public Dictionary<TokenType, Func<object?, object?>> UnaryOperations { get; } = new();
 
-	public bool Compare( object left, object right )
+	public bool Compare( object? left, object? right )
 	{
 		if ( left is null )
 			return right is null;
@@ -21,7 +21,7 @@ public sealed class VariableTypeProvider : ITypeProvider
 		return left.Equals( right );
 	}
 
-	public object CreateDefault()
+	public object? CreateDefault()
 	{
 		return default;
 	}

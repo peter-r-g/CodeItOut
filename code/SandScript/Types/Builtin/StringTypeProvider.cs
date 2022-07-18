@@ -11,7 +11,7 @@ public sealed class StringTypeProvider : ILiteralTypeProvider
 	
 	public Type BackingType => typeof(string);
 
-	public Dictionary<TokenType, Func<object, object, object>> BinaryOperations { get; } = new()
+	public Dictionary<TokenType, Func<object?, object?, object?>> BinaryOperations { get; } = new()
 	{
 		{TokenType.Plus, BinAdd},
 		
@@ -19,9 +19,9 @@ public sealed class StringTypeProvider : ILiteralTypeProvider
 		{TokenType.BangEquals, BinNotEquals}
 	};
 
-	public Dictionary<TokenType, Func<object, object>> UnaryOperations { get; } = new();
+	public Dictionary<TokenType, Func<object?, object?>> UnaryOperations { get; } = new();
 
-	public bool Compare( object left, object right )
+	public bool Compare( object? left, object? right )
 	{
 		return (string)left! == (string)right!;
 	}
@@ -31,7 +31,7 @@ public sealed class StringTypeProvider : ILiteralTypeProvider
 		return string.Empty;
 	}
 
-	public object GetLiteral( Lexer lexer )
+	public object? GetLiteral( Lexer lexer )
 	{
 		if ( lexer.CurrentChar != '"' )
 			return null;
@@ -52,7 +52,7 @@ public sealed class StringTypeProvider : ILiteralTypeProvider
 		return str;
 	}
 
-	public LiteralAst GetLiteralAst( Token token )
+	public LiteralAst? GetLiteralAst( Token token )
 	{
 		return token.Value is string ? new LiteralAst( token, this ) : null;
 	}
@@ -62,17 +62,17 @@ public sealed class StringTypeProvider : ILiteralTypeProvider
 		return TypeName;
 	}
 
-	private static object BinAdd( object left, object right )
+	private static object BinAdd( object? left, object? right )
 	{
 		return (string)left! + (string)right!;
 	}
 
-	private static object BinEquals( object left, object right )
+	private static object? BinEquals( object? left, object? right )
 	{
 		return (string)left! == (string)right!;
 	}
 
-	private static object BinNotEquals( object left, object right )
+	private static object? BinNotEquals( object? left, object? right )
 	{
 		return !(bool)BinEquals( left, right )!;
 	}

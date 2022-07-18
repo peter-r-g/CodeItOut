@@ -4,6 +4,6 @@ namespace SandScript;
 
 public interface ILiteralTypeProvider : ITypeProvider
 {
-	object GetLiteral( Lexer lexer );
-	LiteralAst GetLiteralAst( Token token );
+	object? GetLiteral( Lexer lexer );
+	LiteralAst? GetLiteralAst( Token token );
 }

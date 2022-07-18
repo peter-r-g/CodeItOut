@@ -20,7 +20,7 @@ public sealed class TokenLocation : IEquatable<TokenLocation>
 		return Row + ":" + Column;
 	}
 
-	public bool Equals( TokenLocation other )
+	public bool Equals( TokenLocation? other )
 	{
 		if ( other is null )
 			return false;
@@ -28,7 +28,7 @@ public sealed class TokenLocation : IEquatable<TokenLocation>
 		return Row == other.Row && Column == other.Column;
 	}
 
-	public override bool Equals( object obj )
+	public override bool Equals( object? obj )
 	{
 		return obj is TokenLocation other && Equals( other );
 	}

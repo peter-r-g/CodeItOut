@@ -19,12 +19,12 @@ public class VariableManager<TKey, TValue> where TKey : notnull
 
 	public VariableContainer<TKey, TValue> Current;
 
-	public VariableManager( IEqualityComparer<TKey> comparer )
+	public VariableManager( IEqualityComparer<TKey>? comparer )
 	{
 		Current = new VariableContainer<TKey, TValue>( Guid.Empty, null, null, comparer );
 	}
 
-	public ChildHandle Enter( Guid guid, IEnumerable<KeyValuePair<TKey, TValue>> startVariables = null )
+	public ChildHandle Enter( Guid guid, IEnumerable<KeyValuePair<TKey, TValue>>? startVariables = null )
 	{
 		var handle = new ChildHandle( this );
 		if ( !Current.Children.ContainsKey( guid ) )
