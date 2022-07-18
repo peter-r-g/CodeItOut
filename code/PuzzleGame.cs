@@ -23,6 +23,10 @@ public partial class PuzzleGame : Game
 
 		var pawn = new Pawn();
 		client.Pawn = pawn;
+		
+		var clothing = new ClothingContainer();
+		clothing.LoadFromClient( client );
+		clothing.DressEntity( pawn.Map.Traverser );
 	}
 
 	[ConCmd.Server]
