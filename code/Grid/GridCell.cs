@@ -9,14 +9,14 @@ namespace CodeItOut.Grid;
 
 public partial class GridCell : BaseNetworkable
 {
-	[Net] public Grid Grid { get; set; }
+	[Net] public GridMap GridMap { get; set; }
 	[Net] public IntVector2 GridPosition { get; set; }
 	[Net] public IDictionary<Direction, bool> CanMove { get; set; }
-	[Net] public TraverserItem GroundItem { get; set; }
+	[Net] public GridItem GroundItem { get; set; }
 	[Net] public IList<GridObject> Objects { get; set; }
 
-	public Vector3 WorldPosition => Grid.Position + new Vector3( Grid.CellSize.X * GridPosition.X, Grid.CellSize.Y * GridPosition.Y, 0 );
-	public Vector3 WorldPositionCenter => WorldPosition + new Vector3( (float)Grid.CellSize.X / 2, (float)Grid.CellSize.Y / 2, 0 );
+	public Vector3 WorldPosition => GridMap.Position + new Vector3( GridMap.CellSize.X * GridPosition.X, GridMap.CellSize.Y * GridPosition.Y, 0 );
+	public Vector3 WorldPositionCenter => WorldPosition + new Vector3( (float)GridMap.CellSize.X / 2, (float)GridMap.CellSize.Y / 2, 0 );
 	
 	public GridCell()
 	{
@@ -36,7 +36,7 @@ public partial class GridCell : BaseNetworkable
 		if ( obj.IsObstructing() )
 		{
 			CanMove[dir] = false;
-			if ( Grid.TryGetCellInDirection( GridPosition.X, GridPosition.Y, dir, out var neighbourCell ) )
+			if ( GridMap.TryGetCellInDirection( GridPosition.X, GridPosition.Y, dir, out var neighbourCell ) )
 				neighbourCell.CanMove[dir.Opposite()] = false;
 		}
 
@@ -59,9 +59,9 @@ public partial class GridCell : BaseNetworkable
 	private Vector3 GetObjectPosition( Direction dir )
 	{
 		var bl = WorldPosition;
-		var br = bl + new Vector3( Grid.CellSize.X, 0, 0 );
-		var tl = bl + new Vector3( 0, Grid.CellSize.Y, 0 );
-		var tr = bl + new Vector3( Grid.CellSize.X, Grid.CellSize.Y, 0 );
+		var br = bl + new Vector3( GridMap.CellSize.X, 0, 0 );
+		var tl = bl + new Vector3( 0, GridMap.CellSize.Y, 0 );
+		var tr = bl + new Vector3( GridMap.CellSize.X, GridMap.CellSize.Y, 0 );
 
 		return dir switch
 		{
@@ -77,9 +77,9 @@ public partial class GridCell : BaseNetworkable
 	public void DebugDraw()
 	{
 		var bl = WorldPosition;
-		var br = bl + new Vector3( Grid.CellSize.X, 0, 0 );
-		var tl = bl + new Vector3( 0, Grid.CellSize.Y, 0 );
-		var tr = bl + new Vector3( Grid.CellSize.X, Grid.CellSize.Y, 0 );
+		var br = bl + new Vector3( GridMap.CellSize.X, 0, 0 );
+		var tl = bl + new Vector3( 0, GridMap.CellSize.Y, 0 );
+		var tr = bl + new Vector3( GridMap.CellSize.X, GridMap.CellSize.Y, 0 );
 		
 		DebugOverlay.Line( bl, br, CanMove[Direction.Down] ? Color.Green : Color.Red, 0.1f);
 		DebugOverlay.Line( bl, tl, CanMove[Direction.Left] ? Color.Green : Color.Red, 0.1f);
