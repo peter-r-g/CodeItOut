@@ -2,12 +2,24 @@
 
 namespace SandScript;
 
+/// <summary>
+/// Container for holding all diagnostics across many stages.
+/// </summary>
 public class ScriptDiagnostics
 {
+	/// <summary>
+	/// List of all errors raised.
+	/// </summary>
 	public IReadOnlyList<DiagnosticEntry> Errors => _errors;
 	private readonly List<DiagnosticEntry> _errors;
+	/// <summary>
+	/// List of all warnings raised.
+	/// </summary>
 	public IReadOnlyList<DiagnosticEntry> Warnings => _warnings;
 	private readonly List<DiagnosticEntry> _warnings;
+	/// <summary>
+	/// List of all information raised.
+	/// </summary>
 	public IReadOnlyList<DiagnosticEntry> Informationals => _informationals;
 	private readonly List<DiagnosticEntry> _informationals;
 
@@ -18,6 +30,10 @@ public class ScriptDiagnostics
 		_informationals = new List<DiagnosticEntry>();
 	}
 
+	/// <summary>
+	/// Adds a stages diagnostics then clears it for future use.
+	/// </summary>
+	/// <param name="stageDiagnostics">The stage to add and clear.</param>
 	internal void AddStageAndClear( StageDiagnostics stageDiagnostics )
 	{
 		_errors.AddRange( stageDiagnostics.Errors );

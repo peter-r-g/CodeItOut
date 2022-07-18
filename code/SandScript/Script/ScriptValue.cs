@@ -3,11 +3,23 @@ using SandScript.Exceptions;
 
 namespace SandScript;
 
+/// <summary>
+/// The container for all values in SandScript. This is only used to pass values to the end developer.
+/// </summary>
 public sealed class ScriptValue
 {
+	/// <summary>
+	/// The CSharp type of the value.
+	/// </summary>
 	public readonly Type Type;
+	/// <summary>
+	/// The SandScript type of the value.
+	/// </summary>
 	public readonly ITypeProvider TypeProvider;
 
+	/// <summary>
+	/// The getter for the value contained.
+	/// </summary>
 	public object? Value
 	{
 		get
@@ -63,6 +75,13 @@ public sealed class ScriptValue
 		return nameof(ScriptValue) + "( Type: " + Type + ", Value: " + Value + " )";
 	}
 
+	/// <summary>
+	/// Creates a new instance of <see cref="ScriptValue"/> from the value passed.
+	/// </summary>
+	/// <param name="value">The value to create a <see cref="ScriptValue"/> from.</param>
+	/// <typeparam name="T">The type of value.</typeparam>
+	/// <returns>The new instance of <see cref="ScriptValue"/> created.</returns>
+	/// <exception cref="UnsupportedException">Thrown when the type of the value passed is not supported.</exception>
 	public static ScriptValue From<T>( T value )
 	{
 		switch ( value )

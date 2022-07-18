@@ -5,11 +5,26 @@ using SandScript.AbstractSyntaxTrees;
 
 namespace SandScript;
 
+/// <summary>
+/// Wrapper for a CSharp method or SandScript method.
+/// </summary>
 public class ScriptMethod : IEquatable<ScriptMethod>
 {
+	/// <summary>
+	/// The name of the method.
+	/// </summary>
 	public readonly string Name;
+	/// <summary>
+	/// The return type of the method.
+	/// </summary>
 	public readonly ITypeProvider ReturnTypeProvider;
+	/// <summary>
+	/// The information for each parameter.
+	/// </summary>
 	public readonly IReadOnlyList<(string, ITypeProvider)> Parameters;
+	/// <summary>
+	/// The signature of this method.
+	/// </summary>
 	public readonly MethodSignature Signature;
 	
 	private readonly bool _isCsMethod;
@@ -53,6 +68,12 @@ public class ScriptMethod : IEquatable<ScriptMethod>
 		Signature = MethodSignature.From( this );
 	}
 
+	/// <summary>
+	/// Invokes the method in the context of the interpreter passed.
+	/// </summary>
+	/// <param name="interpreter">The interpreter to pass through</param>
+	/// <param name="values">The arguments of the method.</param>
+	/// <returns>The returned value of the method.</returns>
 	public object? Invoke( Interpreter interpreter, object?[] values )
 	{
 		if ( _isCsMethod )

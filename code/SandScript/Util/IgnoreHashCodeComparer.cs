@@ -2,6 +2,10 @@
 
 namespace SandScript;
 
+/// <summary>
+/// Comparer that ignores has code comparing so that values can be tested for equality.
+/// </summary>
+/// <typeparam name="T">The types of values to be compared.</typeparam>
 public class IgnoreHashCodeComparer<T> : IEqualityComparer<T>
 {
 	public bool Equals( T? x, T? y )

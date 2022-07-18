@@ -4,6 +4,9 @@ using SandScript.AbstractSyntaxTrees;
 
 namespace SandScript;
 
+/// <summary>
+/// Represents a method signature. Used to grab the correct method overload.
+/// </summary>
 public class MethodSignature : IEquatable<MethodSignature>
 {
 	private readonly string _name;
@@ -82,6 +85,12 @@ public class MethodSignature : IEquatable<MethodSignature>
 		return HashCode.Combine( _name, _types );
 	}
 
+	/// <summary>
+	/// Creates a new method signature from a method and a different name.
+	/// </summary>
+	/// <param name="methodName">The new name of the method.</param>
+	/// <param name="method">The method to create a signature from.</param>
+	/// <returns>A new instance of <see cref="MethodSignature"/> built from the new name and method.</returns>
 	public static MethodSignature From( string methodName, ScriptMethod method )
 	{
 		var parameterTypes = ImmutableArray.CreateBuilder<ITypeProvider>();
@@ -91,11 +100,21 @@ public class MethodSignature : IEquatable<MethodSignature>
 		return new MethodSignature( methodName, parameterTypes.ToImmutable() );
 	}
 
+	/// <summary>
+	/// Creates a new method signature from a method.
+	/// </summary>
+	/// <param name="method">The method to create a signature from.</param>
+	/// <returns>A new instance of <see cref="MethodSignature"/> built from the method passed.</returns>
 	public static MethodSignature From( ScriptMethod method )
 	{
 		return From( method.Name, method );
 	}
 
+	/// <summary>
+	/// Creates a new method signature from a method declaration.
+	/// </summary>
+	/// <param name="methodDeclaration">The method declaration to create a signature from.</param>
+	/// <returns>A new instance of <see cref="MethodSignature"/> built from the method declaration.</returns>
 	public static MethodSignature From( MethodDeclarationAst methodDeclaration )
 	{
 		var parameterTypes = ImmutableArray.CreateBuilder<ITypeProvider>();
@@ -105,6 +124,11 @@ public class MethodSignature : IEquatable<MethodSignature>
 		return new MethodSignature( methodDeclaration.MethodName, parameterTypes.ToImmutable() );
 	}
 
+	/// <summary>
+	/// Creates a new method signature from a method call.
+	/// </summary>
+	/// <param name="methodCall">The method call to create a signature from/</param>
+	/// <returns>A new instance of <see cref="MethodSignature"/> built from the method call.</returns>
 	public static MethodSignature From( MethodCallAst methodCall )
 	{
 		return new MethodSignature( methodCall.MethodName, methodCall.ArgumentTypes );
