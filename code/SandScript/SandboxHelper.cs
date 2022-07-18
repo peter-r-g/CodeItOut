@@ -7,19 +7,6 @@ namespace SandScript;
 
 public static class SandboxHelper
 {
-	public static object LatestReturnedValue
-	{
-		get
-		{
-			var value = _latestReturnedValue;
-			_latestReturnedValue = null;
-			return value;
-		}
-		set => _latestReturnedValue = value;
-	}
-
-	private static object _latestReturnedValue;
-	
 	public static List<ScriptMethodAttribute> GetNames( MethodDescription description )
 	{
 		var names = new List<ScriptMethodAttribute>();

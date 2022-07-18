@@ -67,9 +67,8 @@ public class ScriptMethod : IEquatable<ScriptMethod>
 				if ( methodParameters![i + 1].ParameterType == typeof(ScriptValue) )
 					parameters[i + 1] = ScriptValue.From( values[i] );
 			}
-
-			_methodDescription.Invoke( null, parameters );
-			var result = SandboxHelper.LatestReturnedValue;
+			
+			var result = _methodDescription.InvokeWithReturn<object>( null, parameters );
 			if ( result is ScriptValue sv )
 				return sv.Value;
 			
