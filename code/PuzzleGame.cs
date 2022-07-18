@@ -3,18 +3,18 @@ using SandScript;
 
 namespace CodeItOut;
 
-public partial class PuzzleGame : Game
+public class PuzzleGame : Game
 {
 	public new static PuzzleGame Current => Sandbox.Game.Current as PuzzleGame;
-
-	[Net] public PuzzleGameHud Hud { get; private set; }
+	public readonly PuzzleGameHud Hud;
 
 	public PuzzleGame()
 	{
 		SandScript.SandScript.RegisterClassMethods();
+		if ( !Host.IsClient )
+			return;
 		
-		if ( Host.IsClient )
-			Hud = new PuzzleGameHud();
+		Hud = new PuzzleGameHud();
 	}
 
 	public override void ClientJoined( Client client )
