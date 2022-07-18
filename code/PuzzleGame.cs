@@ -10,7 +10,6 @@ public class PuzzleGame : Game
 
 	public PuzzleGame()
 	{
-		SandScript.SandScript.RegisterClassMethods();
 		if ( !Host.IsClient )
 			return;
 		

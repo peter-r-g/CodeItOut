@@ -1,12 +1,11 @@
 ﻿using CodeItOut.Grid;
-using CodeItOut.Items;
 using Sandbox;
 
 namespace CodeItOut;
 
 public partial class Pawn : Player
 {
-	[Net] public Grid.Grid Grid { get; private set; }
+	[Net] public GridMap Map { get; private set; }
 
 	public override void Spawn()
 	{
@@ -46,11 +45,10 @@ public partial class Pawn : Player
 		CameraMode = new LookAtCamera
 		{
 			LerpSpeed = 0,
-			TargetEntity = Grid.Traverser,
+			TargetEntity = Map.Traverser,
 			TargetOffset = new Vector3( 0, 0, 50 )
 		};
 		Controller = null;
-		
 		EnableDrawing = false;
 	}
 
