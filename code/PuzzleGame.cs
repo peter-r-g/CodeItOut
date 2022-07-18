@@ -32,8 +32,10 @@ public partial class PuzzleGame : Game
 	[ConCmd.Server]
 	public static void SubmitSolution( string text )
 	{
+		var script = new Script();
+		script.AddClassMethods<SandScriptInterop.Gameplay>();
 		Script.Execute( text, out var returnValue );
 		if ( returnValue is not null )
-			(ConsoleSystem.Caller.Pawn as Pawn)?.Grid.Run();
+			(ConsoleSystem.Caller.Pawn as Pawn)?.Map.Run();
 	}
 }
