@@ -22,7 +22,7 @@ public class TraverserInventory : Panel
 			UpdateIcon( i >= traverser.Items.Count ? null : traverser.Items[i], _slots[i] );
 	}
 
-	private void UpdateIcon( TraverserItem item, InventoryIcon inventoryIcon )
+	private void UpdateIcon( GridItem item, InventoryIcon inventoryIcon )
 	{
 		if ( item is null )
 		{
