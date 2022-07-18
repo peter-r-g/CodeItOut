@@ -57,7 +57,7 @@ public class ScriptMethod : IEquatable<ScriptMethod>
 	{
 		if ( _isCsMethod )
 		{
-			var parameters = new object[values.Length + 1];
+			var parameters = new object?[values.Length + 1];
 			Array.Copy( values, 0, parameters, 1, values.Length );
 			
 			parameters[0] = interpreter.Owner;
@@ -76,7 +76,7 @@ public class ScriptMethod : IEquatable<ScriptMethod>
 		}
 		else
 		{
-			var parameters = new Dictionary<string, object>();
+			var parameters = new Dictionary<string, object?>();
 			for ( var i = 0; i < values.Length; i++ )
 				parameters.Add( Parameters[i].Item1, values[i] );
 			
