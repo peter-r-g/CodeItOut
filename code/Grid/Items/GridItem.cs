@@ -4,7 +4,7 @@ using Sandbox;
 
 namespace CodeItOut.Items;
 
-public class TraverserItem : ModelEntity
+public class GridItem : ModelEntity
 {
 	public virtual string ItemName => "";
 	protected virtual string ModelPath => "";
@@ -38,7 +38,7 @@ public class TraverserItem : ModelEntity
 		Host.AssertServer();
 
 		_svCurrentGridCell = droppedGridCell;
-		Owner = droppedGridCell.Grid;
+		Owner = droppedGridCell.GridMap;
 		
 		droppedGridCell.GroundItem = this;
 		Position = droppedGridCell.WorldPositionCenter;

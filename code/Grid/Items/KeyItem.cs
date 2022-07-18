@@ -2,7 +2,7 @@
 
 namespace CodeItOut.Items;
 
-public partial class KeyItem : TraverserItem
+public partial class KeyItem : GridItem
 {
 	public override string ItemName => "Key";
 	protected override string ModelPath => "models/citizen_props/crowbar01.vmdl";
