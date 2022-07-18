@@ -18,8 +18,9 @@ public partial class GridObject : ModelEntity
 		SetModel( ModelName );
 	}
 
-	public virtual bool Use( GridTraverser user, TraverserItem usedItem )
+	public virtual bool Use( GridTraverser user, GridItem usedItem, out bool itemUsed )
 	{
+		itemUsed = false;
 		return false;
 	}
 
