@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
 using CodeItOut.Utility;
 using Sandbox;
+using SandScript;
 
 namespace CodeItOut.Grid;
 
-public partial class Grid : Entity
+public partial class GridMap : Entity
 {
 	[Net] public IntVector2 CellSize { get; set; }
 	[Net] public IntVector2 Size { get; set; }
@@ -14,7 +16,7 @@ public partial class Grid : Entity
 	
 	[Net] public GridTraverser Traverser { get; private set; }
 	[Net] public IList<GridCell> CellData { get; private set; }
-	[Net] public IDictionary<IntVector2, TraverserItem> Items { get; private set; }
+	[Net] public IDictionary<IntVector2, GridItem> Items { get; private set; }
 	[Net] public IList<GridEntity> Entities { get; private set; }
 
 	public Vector2 WorldCenter => new(Position.x + WorldWidth / 2, Position.y + WorldHeight / 2);
@@ -24,8 +26,8 @@ public partial class Grid : Entity
 	public override void Spawn()
 	{
 		base.Spawn();
-		
-		Traverser = new GridTraverser {Grid = this, Owner = this};
+
+		Traverser = new GridTraverser {GridMap = this, Owner = this};
 	}
 	
 	public override void FrameSimulate( Client cl )
@@ -46,12 +48,20 @@ public partial class Grid : Entity
 	{
 		for ( var i = 0; i < Traverser.ActionCount; i++ )
 		{
-			await Traverser.RunAction( i );
+			var result = await Traverser.RunAction( i );
+			if ( result == ActionState.Failed )
+			{
+				Log.Info( "Failed" );
+				await GameTask.DelaySeconds( 5 );
+				Reset();
+				return;
+			}
 
 			foreach ( var entity in Entities )
 				await entity.RunAction( i );
 		}
 
+		Log.Info( "Completed" );
 		await GameTask.DelaySeconds( 5 );
 		Reset();
 	}
@@ -82,13 +92,10 @@ public partial class Grid : Entity
 		if ( x < 0 || y < 0 )
 			return false;
 
-		if ( x > Size.X - 1 || y > Size.Y - 1 )
-			return false;
-
-		return true;
+		return x <= Size.X - 1 && y <= Size.Y - 1;
 	}
 
-	public void AddItemTo( int x, int y, TraverserItem item )
+	public void AddItemTo( int x, int y, GridItem item )
 	{
 		if ( !TryGetCellAt( x, y, out var cellInfo ) )
 		{
@@ -114,6 +121,18 @@ public partial class Grid : Entity
 		}
 
 		cellInfo.AddObject( objDirection, obj );
+	}
+
+	public void PlaceEntityAt( int x, int y, GridEntity entity )
+	{
+		if ( !TryGetCellAt( x, y, out var cellInfo ) )
+		{
+			Log.Error( $"Failed to place entity to {{x}}, {y} because the X, Y provided is not valid." );
+			return;
+		}
+
+		entity.GridPosition = new IntVector2( x, y );
+		Entities.Add( entity );
 	}
 
 	public bool TryGetCellAt( int x, int y, out GridCell gridCell )
@@ -143,5 +162,16 @@ public partial class Grid : Entity
 	private int GetIndexAt( int x, int y )
 	{
 		return x + Size.X * y;
+	}
+
+	public static GridMap Load( BaseFileSystem fs, string filePath )
+	{
+		var mapScript = new Script();
+		mapScript.AddClassMethods<SandScriptInterop.MapMaking>();
+		mapScript.Execute( fs.ReadAllText( filePath ) );
+		var map = SandScriptInterop.MapMaking.MapBuilder.Build();
+		SandScriptInterop.MapMaking.MapBuilder = new GridBuilder();
+
+		return map;
 	}
 }
