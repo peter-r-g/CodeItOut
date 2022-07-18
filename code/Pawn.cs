@@ -57,17 +57,20 @@ public partial class Pawn : Player
 	public override void Simulate( Client cl )
 	{
 		base.Simulate( cl );
-		Grid?.Simulate( cl );
-
-		if ( Grid is null || CameraMode is not LookAtCamera camera )
+		if ( Map is null || CameraMode is not LookAtCamera camera )
 			return;
 
-		camera.Origin = Grid.Traverser.Position + new Vector3( 0, -150, 150 );
+		camera.Origin = Map.Traverser.Position + new Vector3( 0, -150, 150 );
 	}
 
 	public override void FrameSimulate( Client cl )
 	{
 		base.FrameSimulate( cl );
-		Grid?.FrameSimulate( cl );
+		
+		if ( GridDebugEnabled )
+			Map?.FrameSimulate( cl );
 	}
+
+	[ConVar.Client( "grid_debug" )]
+	public static bool GridDebugEnabled { get; set; }
 }
