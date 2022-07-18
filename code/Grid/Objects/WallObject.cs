@@ -8,7 +8,7 @@ public class WallObject : GridObject
 	{
 		base.Spawn();
 
-		RenderColor = Color.Black;
+		RenderColor = Color.Red;
 		Scale = 0.1f;
 	}
 
