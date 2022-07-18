@@ -8,5 +8,6 @@ public enum TraverserAction
 	UseObject,
 	UseItem,
 	PickupItem,
-	DropItem
+	DropItem,
+	Wait
 }
