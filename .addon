@@ -11,15 +11,19 @@
   "CodePath": "/code/",
   "RootNamespace": "CodeItOut",
   "Metadata": {
-    "MaxPlayers": 0,
-    "MinPlayers": 0,
-    "GameNetworkType": 1,
-    "MapSelect": 4,
-    "MapList": [
-      "facepunch.construct"
-    ],
-    "RankType": 0,
+    "MaxPlayers": 1,
+    "MinPlayers": 1,
+    "GameNetworkType": "Singleplayer",
+    "MapSelect": "Empty",
+    "MapList": [],
+    "RankType": "None",
     "PerMapRanking": false,
-    "LeaderboardType": 0
+    "LeaderboardType": "None",
+    "Compiler": {
+      "RootNamespace": "CodeItOut",
+      "DefineConstants": "SANDBOX",
+      "NoWarn": "1701;1702;1591;",
+      "Nullables": true
+    }
   }
 }
