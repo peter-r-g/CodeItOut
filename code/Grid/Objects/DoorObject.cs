@@ -17,8 +17,9 @@ public partial class DoorObject : GridObject
 		Scale = 0.1f;
 	}
 
-	public override bool Use( GridTraverser user, TraverserItem usedItem )
+	public override bool Use( GridTraverser user, GridItem usedItem, out bool itemUsed )
 	{
+		itemUsed = false;
 		if ( usedItem is null && Open )
 		{
 			Log.Info( "You win!" );
