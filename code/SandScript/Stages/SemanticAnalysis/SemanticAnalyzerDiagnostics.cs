@@ -11,9 +11,9 @@ public sealed class SemanticAnalyzerDiagnostics : StageDiagnostics
 		Error( $"Expected {expectedType}, got {gotType}", location );
 	}
 
-	public void Undefined( string name )
+	public void Undefined( string name, TokenLocation location )
 	{
-		Error( $"{name} is not defined" );
+		Error( $"{name} is not defined", location );
 	}
 
 	public void Redefined( string name, Guid containerGuid )

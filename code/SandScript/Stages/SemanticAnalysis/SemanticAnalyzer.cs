@@ -5,6 +5,8 @@ namespace SandScript;
 
 public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 {
+	private readonly Script _owner;
+	
 	internal readonly VariableManager<string, ITypeProvider> VariableTypes = new(null);
 	internal readonly VariableManager<MethodSignature, ScriptMethod> VariableMethods =
 		new(new IgnoreHashCodeComparer<MethodSignature>());
@@ -14,20 +16,37 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 	
 	private readonly TypeCheckStack _neededTypes = new();
 
-	internal SemanticAnalyzer()
+	internal SemanticAnalyzer( Script owner )
 	{
-		foreach ( var method in SandScript.CustomMethods )
-		{
-			var methodSignature = MethodSignature.From( method );
-			VariableTypes.Root.AddOrUpdate( methodSignature.ToString(), TypeProviders.Builtin.Method );
-			VariableMethods.Root.AddOrUpdate( methodSignature, method );
-		}
+		_owner = owner;
+		
+		foreach ( var method in owner.CustomMethods )
+			OwnerOnMethodAdded( owner, method );
 
-		foreach ( var variable in SandScript.CustomVariables )
-		{
-			VariableTypes.Root.AddOrUpdate( variable.Name, variable.TypeProvider );
-			_variableExternals.Root.AddOrUpdate( variable.Name, variable );
-		}
+		foreach ( var variable in owner.CustomVariables )
+			OwnerOnVariableAdded( owner, variable );
+		
+		owner.MethodAdded += OwnerOnMethodAdded;
+		owner.VariableAdded += OwnerOnVariableAdded;
+	}
+
+	~SemanticAnalyzer()
+	{
+		_owner.MethodAdded -= OwnerOnMethodAdded;
+		_owner.VariableAdded -= OwnerOnVariableAdded;
+	}
+
+	private void OwnerOnMethodAdded( Script sender, ScriptMethod method )
+	{
+		var methodSignature = MethodSignature.From( method );
+		VariableTypes.Root.AddOrUpdate( methodSignature.ToString(), TypeProviders.Builtin.Method );
+		VariableMethods.Root.AddOrUpdate( methodSignature, method );
+	}
+	
+	private void OwnerOnVariableAdded( Script sender, ScriptVariable variable )
+	{
+		VariableTypes.Root.AddOrUpdate( variable.Name, variable.TypeProvider );
+		_variableExternals.Root.AddOrUpdate( variable.Name, variable );
 	}
 
 	public bool AnalyzeAst( Ast ast )
@@ -85,7 +104,7 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 		var variableName = assignmentAst.VariableName;
 		if ( !VariableTypes.Current.TryGetValue( variableName, out var type ) )
 		{
-			Diagnostics.Undefined( variableName );
+			Diagnostics.Undefined( variableName, assignmentAst.StartLocation );
 			return TypeProviders.Builtin.Nothing;
 		}
 
@@ -217,7 +236,7 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 		var callSignature = MethodSignature.From( methodCallAst );
 		if ( !VariableMethods.Current.TryGetValue( callSignature, out var method ) )
 		{
-			Diagnostics.Undefined( callSignature.ToString() );
+			Diagnostics.Undefined( callSignature.ToString(), methodCallAst.StartLocation );
 			return TypeProviders.Builtin.Nothing;
 		}
 		
@@ -280,7 +299,7 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 		var variableName = variableAst.VariableName;
 		if ( !VariableTypes.Current.TryGetValue( variableName, out var variableType ) )
 		{
-			Diagnostics.Undefined( variableName );
+			Diagnostics.Undefined( variableName, variableAst.StartLocation );
 			return TypeProviders.Builtin.Nothing;
 		}
 
@@ -328,7 +347,7 @@ public sealed class SemanticAnalyzer : NodeVisitor<ITypeProvider>
 	public static bool Analyze( Ast ast ) => Analyze( ast, out _ );
 	public static bool Analyze( Ast ast, out StageDiagnostics diagnostics )
 	{
-		var analyzer = new SemanticAnalyzer();
+		var analyzer = new SemanticAnalyzer( null! );
 		var result = analyzer.AnalyzeAst( ast );
 		diagnostics = analyzer.Diagnostics;
 

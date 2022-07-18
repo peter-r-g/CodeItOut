@@ -15,19 +15,36 @@ public sealed class Interpreter : NodeVisitor<object>
 	
 	internal bool Returning;
 
-	internal Interpreter()
+	internal Interpreter( Script owner )
 	{
-		Owner = null!;
+		Owner = owner;
 		
-		foreach ( var method in SandScript.CustomMethods )
-		{
-			var methodSignature = MethodSignature.From( method );
-			Variables.Root.Add( methodSignature.ToString(), method );
-			MethodVariables.Root.Add( methodSignature, method );
-		}
+		foreach ( var method in owner.CustomMethods )
+			OwnerOnMethodAdded( owner, method );
 
-		foreach ( var variable in SandScript.CustomVariables )
-			Variables.Root.Add( variable.Name, variable );
+		foreach ( var variable in owner.CustomVariables )
+			OwnerOnVariableAdded( owner, variable );
+		
+		owner.MethodAdded += OwnerOnMethodAdded;
+		owner.VariableAdded += OwnerOnVariableAdded;
+	}
+
+	~Interpreter()
+	{
+		Owner.MethodAdded -= OwnerOnMethodAdded;
+		Owner.VariableAdded -= OwnerOnVariableAdded;
+	}
+
+	private void OwnerOnMethodAdded( object sender, ScriptMethod method )
+	{
+		var methodSignature = MethodSignature.From( method );
+		Variables.Root.Add( methodSignature.ToString(), method );
+		MethodVariables.Root.Add( methodSignature, method );
+	}
+
+	private void OwnerOnVariableAdded( Script sender, ScriptVariable variable )
+	{
+		Variables.Root.Add( variable.Name, variable );
 	}
 
 	public object Interpret( Ast ast )

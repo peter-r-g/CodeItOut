@@ -1,4 +1,7 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Reflection;
 using SandScript.Exceptions;
 
 namespace SandScript;
@@ -16,8 +19,83 @@ public class Script
 		}
 	}
 
-	protected readonly SemanticAnalyzer Analyzer = new();
-	protected readonly Interpreter Interpreter = new();
+	internal delegate void MethodAddedEventHandler( Script sender, ScriptMethod method );
+	internal event MethodAddedEventHandler MethodAdded;
+	internal IEnumerable<ScriptMethod> CustomMethods => _customMethodCache;
+	private readonly List<ScriptMethod> _customMethodCache = new();
+
+	internal delegate void VariableAddedEventHandler( Script sender, ScriptVariable variable );
+	internal event VariableAddedEventHandler VariableAdded;
+	internal IEnumerable<ScriptVariable> CustomVariables => _customVariableCache;
+	private readonly List<ScriptVariable> _customVariableCache = new();
+
+	protected readonly SemanticAnalyzer Analyzer;
+	protected readonly Interpreter Interpreter;
+
+	public Script()
+	{
+		Analyzer = new SemanticAnalyzer( this );
+		Interpreter = new Interpreter( this );
+	}
+
+	public void AddClassMethods<T>() where T : class
+	{
+		var methods = TypeLibrary.FindStaticMethods<ScriptMethodAttribute>();
+
+		foreach ( var method in methods )
+		{
+			if ( method.TypeDescription.TargetType != typeof(T) )
+				continue;
+
+			var returnTypeProvider = SandboxHelper.GetReturnTypeProvider( method, out var returnType );
+			if ( returnTypeProvider is null )
+				throw new ReturnTypeUnsupportedException( returnType );
+			
+			var parameters = SandboxHelper.GetParameters( method );
+			if ( parameters.Count == 0 || parameters[0].ParameterType != typeof(Script) )
+				throw new ParameterException( "First parameter must be of type " + nameof(Script) + "." );
+
+			for ( var i = 1; i < parameters.Count; i++ )
+			{
+				var parameter = parameters[i];
+				if ( parameter.ParameterType != typeof(ScriptValue) && parameter.ParameterTypeProvider is null )
+					throw new ParameterException( "Parameter type \"" + parameter.ParameterType + "\" is unsupported." );
+			}
+
+			var methodNameAttributes = SandboxHelper.GetNames( method );
+			foreach ( var methodNameAttribute in methodNameAttributes )
+			{
+				var scriptMethod = new ScriptMethod( method, methodNameAttribute );
+				_customMethodCache.Add( scriptMethod );
+				MethodAdded?.Invoke( this, scriptMethod );
+			}
+		}
+	}
+
+	public void AddClassVariables<T>() where T : class
+	{
+		var properties = typeof(T).GetProperties( BindingFlags.Public | BindingFlags.Static )
+			.Where( p => p.GetCustomAttributes( typeof(ScriptVariableAttribute), false ).Length > 0 );
+
+		foreach ( var property in properties )
+		{
+			if ( TypeProviders.GetByBackingType( property.PropertyType ) is null )
+				throw new TypeUnsupportedException( property.PropertyType );
+
+			foreach ( var attribute in property.GetCustomAttributes<ScriptVariableAttribute>() )
+			{
+				if ( attribute.CanRead && !property.CanRead )
+					throw new UnreadableVariableException( property, attribute );
+
+				if ( attribute.CanWrite && !property.CanWrite )
+					throw new UnwritableVariableException( property, attribute );
+
+				var variable = new ScriptVariable( property, attribute );
+				_customVariableCache.Add( variable );
+				VariableAdded?.Invoke( this, variable );
+			}
+		}
+	}
 
 	public void AddGlobal( string varName, ScriptValue value )
 	{
