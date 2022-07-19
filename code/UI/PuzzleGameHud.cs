@@ -6,7 +6,7 @@ namespace CodeItOut;
 [UseTemplate]
 public class PuzzleGameHud : RootPanel
 {
-	private string _text;
+	private string _text = string.Empty;
 
 	public PuzzleGameHud()
 	{
@@ -21,6 +21,7 @@ public class PuzzleGameHud : RootPanel
 		SetClass( "active", devCam is null );
 	}
 
+	
 	public void Play()
 	{
 		if ( string.IsNullOrWhiteSpace( _text ) )
