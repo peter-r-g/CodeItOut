@@ -71,8 +71,9 @@ public static class SandScriptInterop
 
 		[ScriptMethod( "PickupItem" )]
 		[ScriptMethodParameter( 0, "script", typeof(Script) )]
+		[ScriptMethodParameter( 1, "indexToPlaceIn", typeof(double) )]
 		[ScriptMethodReturn( typeof(void) )]
-		public static void PickupItem( Script script )
+		public static void PickupItem( Script script, double indexToPlaceIn )
 		{
 			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
 				return;
