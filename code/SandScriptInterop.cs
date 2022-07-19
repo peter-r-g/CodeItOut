@@ -66,7 +66,7 @@ public static class SandScriptInterop
 			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
 				return;
 
-			pawn.Map.Traverser.AddAction( TraverserAction.UseItem, itemIndex );
+			pawn.Map.Traverser.AddAction( TraverserAction.UseItem, (int)indexToUse );
 		}
 
 		[ScriptMethod( "PickupItem" )]
@@ -78,7 +78,7 @@ public static class SandScriptInterop
 			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
 				return;
 
-			pawn.Map.Traverser.AddAction( TraverserAction.PickupItem );
+			pawn.Map.Traverser.AddAction( TraverserAction.PickupItem, (int)indexToPlaceIn );
 		}
 
 		[ScriptMethod( "DropItem" )]
@@ -90,7 +90,7 @@ public static class SandScriptInterop
 			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
 				return;
 
-			pawn.Map.Traverser.AddAction( TraverserAction.DropItem, itemIndex );
+			pawn.Map.Traverser.AddAction( TraverserAction.DropItem, (int)indexToDrop );
 		}
 
 		[ScriptMethod( "Wait" )]

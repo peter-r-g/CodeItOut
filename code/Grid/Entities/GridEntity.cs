@@ -96,9 +96,9 @@ public partial class GridEntity : AnimatedEntity
 			TraverserAction.TurnLeft => TurnLeft(),
 			TraverserAction.TurnRight => TurnRight(),
 			TraverserAction.UseObject => UseObject(),
-			TraverserAction.UseItem => UseItem( (double)args[0] ),
-			TraverserAction.PickupItem => PickupItem(),
-			TraverserAction.DropItem => DropItem( (double)args[0] ),
+			TraverserAction.UseItem when args.Length == 1 => UseItem( (int)args[0] ),
+			TraverserAction.PickupItem when args.Length == 1 => PickupItem( (int)args[0] ),
+			TraverserAction.DropItem when args.Length == 1 => DropItem( (int)args[0] ),
 			TraverserAction.Wait => Wait(),
 			_ => throw new ArgumentOutOfRangeException( nameof(action), action, null )
 		};
@@ -148,19 +148,19 @@ public partial class GridEntity : AnimatedEntity
 			ArraySegment<GridItem>.Empty );
 	}
 
-	protected virtual ActionResult UseItem( double itemIndex )
+	protected virtual ActionResult UseItem( int indexToUse )
 	{
 		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
 			ArraySegment<GridItem>.Empty );
 	}
 
-	protected virtual ActionResult PickupItem()
+	protected virtual ActionResult PickupItem( int indexToPlaceIn )
 	{
 		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
 			ArraySegment<GridItem>.Empty );
 	}
 
-	protected virtual ActionResult DropItem( double itemIndex )
+	protected virtual ActionResult DropItem( int indexToDrop )
 	{
 		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
 			ArraySegment<GridItem>.Empty );
