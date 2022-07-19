@@ -35,7 +35,15 @@ public class PuzzleGame : Game
 	{
 		var script = new Script();
 		script.AddClassMethods<SandScriptInterop.Gameplay>();
-		Script.Execute( text, out var returnValue );
+		var returnValue = script.Execute( text, out var diagnostics );
+		
+		foreach ( var info in diagnostics.Informationals )
+			Log.Info( $"SandScript Information: {info}" );
+		foreach ( var warning in diagnostics.Warnings )
+			Log.Warning( $"SandScript Warning: {warning}" );
+		foreach ( var error in diagnostics.Errors )
+			Log.Warning( $"SandScript Error: {error}" );
+		
 		if ( returnValue is not null )
 			(ConsoleSystem.Caller.Pawn as Pawn)?.Map.Run();
 	}
