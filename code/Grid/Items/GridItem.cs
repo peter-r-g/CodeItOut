@@ -9,7 +9,7 @@ public class GridItem : ModelEntity
 	public virtual string ItemName => "";
 	protected virtual string ModelPath => "";
 
-	private GridTraverser _svHolder;
+	private GridEntity _svHolder;
 	private GridCell _svCurrentGridCell;
 
 	public override void Spawn()
@@ -19,7 +19,7 @@ public class GridItem : ModelEntity
 		SetModel( ModelPath );
 	}
 
-	public virtual void OnPickup( GridTraverser holder )
+	public virtual void OnPickup( GridEntity holder )
 	{
 		Host.AssertServer();
 
