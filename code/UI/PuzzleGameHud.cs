@@ -34,4 +34,13 @@ public class PuzzleGameHud : RootPanel
 	{
 		_text = text;
 	}
+
+	[ConCmd.Client( "play_game" )]
+	public static void PlayGame()
+	{
+		Log.Info( "Sending:" );
+		var text = FileSystem.Data.ReadAllText( "input.s&s" );
+		Log.Info( text );
+		PuzzleGame.SubmitSolution( text );
+	}
 }
