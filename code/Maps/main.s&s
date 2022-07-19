@@ -1,4 +1,20 @@
 ﻿/*
+    Helper variables for direction translation to C#.
+*/
+string DIRECTION_UP = "up";
+string DIRECTION_RIGHT = "right";
+string DIRECTION_DOWN = "down";
+string DIRECTION_LEFT = "left";
+
+/*
+    Helper variables for the PlaceCorner method
+*/
+number TOP_LEFT = 0;
+number TOP_RIGHT = 1;
+number BOTTOM_LEFT = 2;
+number BOTTOM_RIGHT = 3;
+
+/*
     Helper function to place all walls for a grid location.
 */
 void PlaceWalls( number x, number y, bool up, bool down, bool left, bool right )
@@ -19,15 +35,15 @@ void PlaceWalls( number x, number y, bool up, bool down, bool left, bool right )
 /*
     Places two walls in a corner shape.
 */
-void PlaceCorner( number x, number y, string corner )
+void PlaceCorner( number x, number y, number corner )
 {
-    if ( corner == "tl" )
+    if ( corner == TOP_LEFT )
         PlaceWalls( x, y, true, false, true, false );
-    else if ( corner == "tr" )
+    else if ( corner == TOP_RIGHT )
         PlaceWalls( x, y, true, false, false, true );
-    else if ( corner == "bl" )
+    else if ( corner == BOTTOM_LEFT )
         PlaceWalls( x, y, false, true, true, false );
-    else if ( corner == "br" )
+    else if ( corner == BOTTOM_RIGHT )
         PlaceWalls( x, y, false, true, false, true );
 }
 
@@ -58,6 +74,7 @@ void Main()
     SetSize( 5, 5 );
     SetCellSize( 100, 100 );
     SetStartPosition( 0, 0 );
+    SetItemCap( 1 );
     
     // Place floors everywhere.
     for ( var x = 0; x < 5; x += 1 )
@@ -68,24 +85,24 @@ void Main()
     PlaceWalls( 0, 0, false, true, true, true );
     
     // First hallway.
-    PlaceCorner( 0, 1, "tl" );
+    PlaceCorner( 0, 1, TOP_LEFT );
     PlaceHorizontalHallway( 1, 1, 3 );
     
     // Second hallway.
-    PlaceCorner( 4, 1, "br" );
+    PlaceCorner( 4, 1, BOTTOM_RIGHT );
     PlaceWalls( 4, 2, false, false, true, true );
     
     // Third hallway.
-    PlaceCorner( 4, 3, "tr" );
+    PlaceCorner( 4, 3, TOP_RIGHT );
     PlaceHorizontalHallway( 1, 3, 3 );
     
     // Fourth hallway.
-    PlaceCorner( 0, 3, "bl" );
+    PlaceCorner( 0, 3, BOTTOM_LEFT );
     PlaceWalls( 0, 4, false, false, true, true );
     
     // Key items
     PlaceKey( 4, 2 );
-    PlaceLockedExit( 0, 4, "up" );
+    PlaceLockedExit( 0, 4, DIRECTION_UP );
 }
 
 // Call the main method.
