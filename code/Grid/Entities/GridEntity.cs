@@ -13,7 +13,8 @@ public partial class GridEntity : AnimatedEntity
 	[Net] public GridMap GridMap { get; set; }
 	[Net] public IntVector2 GridPosition { get; set; }
 	[Net] public Direction Direction { get; private set; }
-	[Net] public IList<GridItem> Items { get; private set; }
+	[Net] private IList<GridItem> Items { get; set; }
+	[Net] public int ItemCapacity { get; set; }
 
 	protected virtual Direction StartDirection => Direction.Up;
 

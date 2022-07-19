@@ -10,6 +10,7 @@ public class GridBuilder
 	private IntVector2 _cellSize;
 	private IntVector2 _size;
 	private IntVector2 _startPosition;
+	private int _itemCap;
 	private Vector3 _worldPosition;
 
 	private readonly Dictionary<(int, int), Type> _items = new();
@@ -51,6 +52,12 @@ public class GridBuilder
 		return this;
 	}
 
+	public GridBuilder WithItemCap( int itemCap )
+	{
+		_itemCap = itemCap;
+		return this;
+	}
+
 	public GridBuilder WithWorldPosition( Vector3 position )
 	{
 		_worldPosition = position;
@@ -79,9 +86,10 @@ public class GridBuilder
 			CellSize = _cellSize,
 			Position = _worldPosition,
 			Size = _size,
-			StartPosition = _startPosition
+			StartPosition = _startPosition,
+			Traverser = {ItemCapacity = _itemCap}
 		};
-		
+
 		for ( var y = 0; y < grid.Size.Y; y++ )
 		{
 			for ( var x = 0; x < grid.Size.X; x++ )

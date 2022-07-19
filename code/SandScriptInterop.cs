@@ -143,6 +143,15 @@ public static class SandScriptInterop
 			MapBuilder.WithStartPosition( (int)x, (int)y );
 		}
 
+		[ScriptMethod( "SetItemCap" )]
+		[ScriptMethodParameter( 0, "script", typeof(Script) )]
+		[ScriptMethodParameter( 1, "itemCap", typeof(double) )]
+		[ScriptMethodReturn( typeof(void) )]
+		public static void SetItemCap( Script script, double itemCap )
+		{
+			MapBuilder.WithItemCap( (int)itemCap );
+		}
+
 		[ScriptMethod( "PlaceFloor" )]
 		[ScriptMethodParameter( 0, "script", typeof(Script) )]
 		[ScriptMethodParameter( 1, "x", typeof(double) )]
