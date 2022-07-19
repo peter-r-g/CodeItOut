@@ -27,7 +27,6 @@ public class GridItem : ModelEntity
 		Owner = holder;
 		
 		EnableDrawing = false;
-		holder.Items.Add( this );
 
 		if ( _svCurrentGridCell is not null )
 			_svCurrentGridCell.GroundItem = null;
@@ -47,7 +46,6 @@ public class GridItem : ModelEntity
 		if ( _svHolder is null )
 			return;
 
-		_svHolder.Items.Remove( this );
 		_svHolder = null;
 	}
 

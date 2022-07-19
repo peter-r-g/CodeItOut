@@ -22,13 +22,6 @@ public class GridTraverser : GridEntity
 		TraverserHud.Instance.Traverser = this;
 	}
 
-	public override void Reset()
-	{
-		base.Reset();
-		
-		Items.Clear();
-	}
-
 	protected override ActionResult MoveForward()
 	{
 		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
@@ -83,51 +76,26 @@ public class GridTraverser : GridEntity
 		return ActionResult.Fail();
 	}
 
-	protected override ActionResult UseItem( double itemIndex )
+	protected override ActionResult UseItem( int indexToUse )
 	{
-		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
-			return ActionResult.Fail();
-		
-		if ( Items.Count < itemIndex )
+		if ( !TryUseItem( indexToUse, out var usedItem, out var itemUsed ) )
 			return ActionResult.Fail();
 
-		foreach ( var obj in cellInfo.GetObjectsInDirection( Direction ) )
-		{
-			var item = Items[(int)itemIndex];
-			if ( obj.Use( this, item, out var itemUsed ) )
-				return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-					itemUsed ? new[] {item} : ArraySegment<GridItem>.Empty );
-		}
-
-		return ActionResult.Fail();
-	}
-
-	protected override ActionResult PickupItem()
-	{
-		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
-			return ActionResult.Fail();
-
-		if ( cellInfo.GroundItem is null )
-			return ActionResult.Fail();
-
-		cellInfo.GroundItem.OnPickup( this );
-		return ActionResult.Success( GridPosition, Direction, new[] {cellInfo.GroundItem},
-			ArraySegment<GridItem>.Empty );
-	}
-
-	protected override ActionResult DropItem( double itemIndex )
-	{
-		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
-			return ActionResult.Fail();
-
-		if ( cellInfo.GroundItem is not null )
-			return ActionResult.Fail();
-
-		if ( Items.Count < itemIndex )
-			return ActionResult.Fail();
-		
-		Items[(int)itemIndex].OnDrop( cellInfo );
 		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			new[] {cellInfo.GroundItem} );
+			itemUsed ? new[] {usedItem} : ArraySegment<GridItem>.Empty );
+	}
+
+	protected override ActionResult PickupItem( int indexToPlaceIn )
+	{
+		return !TryPickupItem( indexToPlaceIn, out var pickedUpItem )
+			? ActionResult.Fail()
+			: ActionResult.Success( GridPosition, Direction, new[] {pickedUpItem}, ArraySegment<GridItem>.Empty );
+	}
+
+	protected override ActionResult DropItem( int indexToDrop )
+	{
+		return !TryDropItem( indexToDrop, out var droppedItem )
+			? ActionResult.Fail()
+			: ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty, new[] {droppedItem} );
 	}
 }

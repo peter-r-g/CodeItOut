@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
@@ -74,9 +75,71 @@ public partial class GridEntity : AnimatedEntity
 		
 		GridPosition = GridMap.StartPosition;
 		Direction = StartDirection;
+		Items.Clear();
 		_svActions.Clear();
 		_svPreviousGridPosition = GridPosition;
 		_svPreviousDirection = Direction;
+	}
+
+	public IList<GridItem> GetItems()
+	{
+		return Items;
+	}
+
+	protected bool TryUseItem( int indexToUse, [NotNullWhen( true )] out GridItem? usedItem, out bool itemUsed )
+	{
+		usedItem = null;
+		itemUsed = false;
+		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
+			return false;
+
+		if ( Items.Count < indexToUse )
+			return false;
+		
+		usedItem = Items[indexToUse];
+		foreach ( var obj in cellInfo.GetObjectsInDirection( Direction ) )
+		{
+			if ( obj.Use( this, usedItem, out itemUsed ) )
+				return true;
+		}
+
+		return false;
+	}
+	
+	protected bool TryPickupItem( int indexToPlaceIn, [NotNullWhen( true )] out GridItem? item )
+	{
+		item = null;
+		if ( indexToPlaceIn > ItemCapacity - 1 )
+			return false;
+		
+		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
+			return false;
+
+		if ( cellInfo.GroundItem is null )
+			return false;
+
+		item = cellInfo.GroundItem;
+		cellInfo.GroundItem.OnPickup( this );
+		Items.Insert( indexToPlaceIn, item );
+		return true;
+	}
+
+	protected bool TryDropItem( int indexToDrop, [NotNullWhen( true )] out GridItem? item )
+	{
+		item = null;
+		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
+			return false;
+
+		if ( cellInfo.GroundItem is not null )
+			return false;
+
+		if ( Items.Count < indexToDrop )
+			return false;
+
+		item = Items[indexToDrop];
+		item.OnDrop( cellInfo );
+		Items.RemoveAt( indexToDrop );
+		return true;
 	}
 
 	public void AddAction( TraverserAction action, params object[] args )

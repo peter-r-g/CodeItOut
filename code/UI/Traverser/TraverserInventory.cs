@@ -15,11 +15,12 @@ public class TraverserInventory : Panel
 		base.Tick();
 
 		var traverser = TraverserHud.Traverser;
-		for ( var i = _slots.Count; i < traverser.Items.Count; i++ )
+		var items = traverser.GetItems();
+		for ( var i = _slots.Count; i < items.Count; i++ )
 			_slots.Add( new InventoryIcon( i, this ) );
 		
 		for ( var i = 0; i < _slots.Count; i++ )
-			UpdateIcon( i >= traverser.Items.Count ? null : traverser.Items[i], _slots[i] );
+			UpdateIcon( i >= items.Count ? null : items[i], _slots[i] );
 	}
 
 	private void UpdateIcon( GridItem item, InventoryIcon inventoryIcon )
