@@ -12,7 +12,7 @@ public partial class GridCell : BaseNetworkable
 	[Net] public GridMap GridMap { get; set; }
 	[Net] public IntVector2 GridPosition { get; set; }
 	[Net] public IDictionary<Direction, bool> CanMove { get; set; }
-	[Net] public GridItem GroundItem { get; set; }
+	[Net] public GridItem? GroundItem { get; set; }
 	[Net] public IList<GridObject> Objects { get; set; }
 
 	public Vector3 WorldPosition => GridMap.Position + new Vector3( GridMap.CellSize.X * GridPosition.X, GridMap.CellSize.Y * GridPosition.Y, 0 );
@@ -22,7 +22,7 @@ public partial class GridCell : BaseNetworkable
 	{
 		if ( !Host.IsServer )
 			return;
-		
+
 		CanMove.Add( Direction.Up, false );
 		CanMove.Add( Direction.Right, false );
 		CanMove.Add( Direction.Down, false );
