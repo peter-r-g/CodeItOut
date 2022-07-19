@@ -59,9 +59,9 @@ public static class SandScriptInterop
 
 		[ScriptMethod( "UseItem" )]
 		[ScriptMethodParameter( 0, "script", typeof(Script) )]
-		[ScriptMethodParameter( 1, "itemIndex", typeof(double) )]
+		[ScriptMethodParameter( 1, "indexToUse", typeof(double) )]
 		[ScriptMethodReturn( typeof(void) )]
-		public static void UseItem( Script script, double itemIndex )
+		public static void UseItem( Script script, double indexToUse )
 		{
 			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
 				return;
@@ -82,9 +82,9 @@ public static class SandScriptInterop
 
 		[ScriptMethod( "DropItem" )]
 		[ScriptMethodParameter( 0, "script", typeof(Script) )]
-		[ScriptMethodParameter( 1, "itemIndex", typeof(double) )]
+		[ScriptMethodParameter( 1, "indexToDrop", typeof(double) )]
 		[ScriptMethodReturn( typeof(void) )]
-		public static void DropItem( Script script, double itemIndex )
+		public static void DropItem( Script script, double indexToDrop )
 		{
 			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
 				return;
