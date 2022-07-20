@@ -1,5 +1,4 @@
-﻿using CodeItOut.Grid.Traverser;
-using CodeItOut.Items;
+﻿using CodeItOut.Items;
 using Sandbox;
 
 namespace CodeItOut.Grid;
