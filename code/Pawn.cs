@@ -5,7 +5,7 @@ namespace CodeItOut;
 
 public partial class Pawn : Player
 {
-	[Net] public GridMap Map { get; private set; }
+	[Net] public GridMap? Map { get; private set; }
 
 	public override void Spawn()
 	{
