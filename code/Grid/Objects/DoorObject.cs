@@ -21,7 +21,7 @@ public partial class DoorObject : GridObject
 		itemUsed = false;
 		if ( usedItem is null && Open )
 		{
-			Log.Info( "You win!" );
+			_ = GridMap.Win();
 			return true;
 		}
 		

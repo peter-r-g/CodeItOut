@@ -68,6 +68,14 @@ public partial class GridEntity : AnimatedEntity
 		Rotation = Rotation.Lerp( _svPreviousDirection.ToRotation(), Direction.ToRotation(),
 			_svTimeSinceTurnStart / TurnTime );
 	}
+
+	public virtual async Task PlayWinAnimation()
+	{
+	}
+
+	public virtual async Task PlayLoseAnimation()
+	{
+	}
 	
 	public virtual void Reset()
 	{

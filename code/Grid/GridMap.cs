@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
 using CodeItOut.Utility;
@@ -23,6 +23,7 @@ public partial class GridMap : Entity
 	public float WorldWidth => Size.X * CellSize.X;
 	public float WorldHeight => Size.Y * CellSize.Y;
 
+	private bool _gameOver;
 
 	public override void Spawn()
 	{
@@ -45,17 +46,49 @@ public partial class GridMap : Entity
 		}
 	}
 
+	public async Task Win()
+	{
+		_gameOver = true;
+		var entityTasks = new Task[Entities.Count + 1];
+		entityTasks[0] = Traverser.PlayWinAnimation();
+		for ( var i = 0; i < Entities.Count; i++ )
+			entityTasks[i + 1] = Entities[i].PlayWinAnimation();
+
+		// TODO: WhenAll isn't whitelisted.
+		foreach ( var task in entityTasks )
+			await task;
+		
+		Log.Info( "Win finished" );
+		Reset();
+	}
+
+	public async Task Lose()
+	{
+		_gameOver = true;
+		var entityTasks = new Task[Entities.Count + 1];
+		entityTasks[0] = Traverser.PlayLoseAnimation();
+		for ( var i = 0; i < Entities.Count; i++ )
+			entityTasks[i + 1] = Entities[i].PlayLoseAnimation();
+
+		// TODO: WhenAll isn't whitelisted.
+		foreach ( var task in entityTasks )
+			await task;
+		
+		Log.Info( "Lose finished" );
+		Reset();
+	}
 
 	public async void Run()
 	{
 		for ( var i = 0; i < Traverser.ActionCount; i++ )
 		{
+			if ( _gameOver )
+				return;
+			
 			var result = await Traverser.RunAction( i );
 			if ( result == ActionState.Failed )
 			{
-				Log.Info( "Failed" );
-				await GameTask.DelaySeconds( 5 );
-				Reset();
+				await Lose();
 				return;
 			}
 
@@ -63,15 +96,15 @@ public partial class GridMap : Entity
 				await entity.RunAction( i );
 		}
 
-		Log.Info( "Completed" );
-		await GameTask.DelaySeconds( 5 );
-		Reset();
+		if ( !_gameOver )
+			await Lose();
 	}
 
 	public void Reset()
 	{
 		Host.AssertServer();
 
+		_gameOver = false;
 		Traverser.Reset();
 
 		foreach ( var (startPosition, item) in Items )
@@ -110,6 +143,7 @@ public partial class GridMap : Entity
 			Log.Error( $"Failed to add item to {x}, {y} because an item is already there." );
 		}
 
+		item.GridMap = this;
 		Items.Add( new IntVector2( x, y ), item );
 		item.OnDrop( cellInfo );
 	}

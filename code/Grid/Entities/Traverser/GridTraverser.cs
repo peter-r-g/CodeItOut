@@ -45,6 +45,17 @@ public class GridTraverser : GridEntity
 		animation.WithVelocity( Rotation.Forward.Normal * MoveSpeed );
 	}
 	
+	public override async Task PlayWinAnimation()
+	{
+		
+	}
+
+	public override async Task PlayLoseAnimation()
+	{
+	}
+
+
+
 	protected override ActionResult MoveForward()
 	{
 		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
