@@ -97,11 +97,9 @@ public class GridTraverser : GridEntity
 
 	protected override ActionResult UseItem( int indexToUse )
 	{
-		if ( !TryUseItem( indexToUse, out var usedItem, out var itemUsed ) )
-			return ActionResult.Fail();
-
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			itemUsed ? new[] {usedItem} : ArraySegment<GridItem>.Empty );
+		return !TryUseItem( indexToUse, out var usedItem, out var itemUsed )
+			? ActionResult.Fail()
+			: ActionResult.Success( GridPosition, Direction );
 	}
 
 	protected override ActionResult PickupItem( int indexToPlaceIn )
