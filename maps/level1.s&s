@@ -1,4 +1,19 @@
 ﻿/*
+    Constants for the map.
+*/
+// Constants for the grid size of the map.
+number SIZE_X = 1;
+number SIZE_Y = 5;
+// Constants for the size of cells in source units.
+number CELL_SIZE_X = 100;
+number CELL_SIZE_Y = 100;
+// Constants for the player start position.
+number START_POSITION_X = 0;
+number START_POSITION_Y = 0;
+// Constant for the max amount of items the player can carry.
+number ITEM_CAP = 1;
+
+/*
     Helper variables for direction translation to C#.
 */
 string DIRECTION_UP = "up";
@@ -71,14 +86,14 @@ void PlaceVerticalHallway( number x, number y, number yOffset )
 void Main()
 {
     // Map setup.
-    SetSize( 5, 5 );
-    SetCellSize( 100, 100 );
-    SetStartPosition( 0, 0 );
-    SetItemCap( 1 );
+    SetSize( SIZE_X, SIZE_Y );
+    SetCellSize( CELL_SIZE_X, CELL_SIZE_Y );
+    SetStartPosition( START_POSITION_X, START_POSITION_Y );
+    SetItemCap( ITEM_CAP );
     
     // Place floors everywhere.
-    for ( var x = 0; x < 5; x += 1 )
-        for ( var y = 0; y < 5; y += 1 )
+    for ( var x = 0; x < SIZE_X; x += 1 )
+        for ( var y = 0; y < SIZE_Y; y += 1 )
             PlaceFloor( x, y );
     
     // Start location.
@@ -100,7 +115,7 @@ void Main()
     PlaceCorner( 0, 3, BOTTOM_LEFT );
     PlaceWalls( 0, 4, false, false, true, true );
     
-    // Key items
+    // Key items.
     PlaceKey( 4, 2 );
     PlaceLockedExit( 0, 4, DIRECTION_UP );
 }
