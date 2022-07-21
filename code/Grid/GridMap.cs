@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
 using CodeItOut.Utility;

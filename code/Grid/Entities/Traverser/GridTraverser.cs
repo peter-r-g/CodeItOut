@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using CodeItOut.Items;
-using CodeItOut.UI;
+﻿using CodeItOut.UI;
 using CodeItOut.Utility;
 using Sandbox;
 

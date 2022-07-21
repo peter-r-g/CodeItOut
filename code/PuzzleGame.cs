@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 using System.Text.Json;
 using CodeItOut.Grid;
-using CodeItOut.Grid.Traverser;
 using Sandbox;
 using SandScript;
 

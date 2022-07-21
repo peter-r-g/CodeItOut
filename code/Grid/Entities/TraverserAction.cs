@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using CodeItOut.Grid.Traverser;
 
 namespace CodeItOut.Grid;
