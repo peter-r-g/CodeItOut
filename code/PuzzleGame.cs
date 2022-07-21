@@ -25,7 +25,7 @@ public class PuzzleGame : Game
 		
 		var clothing = new ClothingContainer();
 		clothing.LoadFromClient( client );
-		clothing.DressEntity( pawn.Map.Traverser );
+		clothing.DressEntity( pawn.Map?.Traverser );
 	}
 	
 	[ConCmd.Client( "play_game" )]
@@ -50,6 +50,6 @@ public class PuzzleGame : Game
 			Log.Warning( $"SandScript Error: {error}" );
 		
 		if ( returnValue is not null )
-			(ConsoleSystem.Caller.Pawn as Pawn)?.Map.Run();
+			(ConsoleSystem.Caller.Pawn as Pawn)?.Map?.Run();
 	}
 }
