@@ -62,9 +62,6 @@ public partial class GridMap : Entity
 		// TODO: WhenAll isn't whitelisted.
 		foreach ( var task in entityTasks )
 			await task;
-		
-		Log.Info( "Win finished" );
-		Reset();
 	}
 
 	public async Task Lose()
@@ -80,9 +77,6 @@ public partial class GridMap : Entity
 		// TODO: WhenAll isn't whitelisted.
 		foreach ( var task in entityTasks )
 			await task;
-		
-		Log.Info( "Lose finished" );
-		Reset();
 	}
 
 	public async void Run()
