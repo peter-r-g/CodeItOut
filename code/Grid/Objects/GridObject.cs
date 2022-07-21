@@ -15,7 +15,9 @@ public partial class GridObject : ModelEntity
 	public override void Spawn()
 	{
 		base.Spawn();
+		
 		SetModel( ModelName );
+		SetupPhysicsFromModel( PhysicsMotionType.Static );
 	}
 
 	public virtual bool Use( GridEntity user, GridItem? usedItem, out bool itemUsed )
