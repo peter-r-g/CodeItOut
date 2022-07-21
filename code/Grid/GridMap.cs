@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
 using CodeItOut.Utility;
@@ -32,6 +34,8 @@ public partial class GridMap : Entity
 
 		State = MapState.NotStarted;
 		Traverser = new GridTraverser {GridMap = this, Owner = this};
+
+		Map.Scene.AmbientLightColor = Color.White;
 	}
 	
 	public override void FrameSimulate( Client cl )
@@ -68,7 +72,7 @@ public partial class GridMap : Entity
 		Event.Run( GridEvent.MapLostEvent );
 	}
 
-	public async void Run()
+	public async Task Run( CancellationToken cancellationToken )
 	{
 		Host.AssertServer();
 		
@@ -76,10 +80,13 @@ public partial class GridMap : Entity
 		
 		for ( var i = 0; i < Traverser.ActionCount; i++ )
 		{
-			if ( _gameOver )
+			if ( _gameOver || cancellationToken.IsCancellationRequested )
 				return;
 			
 			var result = await Traverser.RunAction( i );
+			if ( cancellationToken.IsCancellationRequested )
+				return;
+			
 			if ( result == ActionState.Failed )
 			{
 				Lose();
@@ -87,7 +94,11 @@ public partial class GridMap : Entity
 			}
 
 			foreach ( var entity in Entities )
+			{
 				await entity.RunAction( i );
+				if ( cancellationToken.IsCancellationRequested )
+					return;
+			}
 		}
 
 		if ( !_gameOver )
@@ -100,6 +111,7 @@ public partial class GridMap : Entity
 
 		_gameOver = false;
 		State = MapState.NotStarted;
+
 		Traverser.Reset();
 
 		foreach ( var (startPosition, item) in Items )

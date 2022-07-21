@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text.Json;
+using System.Threading;
 using CodeItOut.Grid;
 using Sandbox;
 using SandScript;
@@ -11,6 +12,8 @@ public class PuzzleGame : Game
 {
 	public new static PuzzleGame Current => Sandbox.Game.Current as PuzzleGame;
 	public readonly PuzzleGameHud Hud;
+
+	private CancellationTokenSource? _svRunCancelSource;
 
 	public PuzzleGame()
 	{
@@ -57,6 +60,7 @@ public class PuzzleGame : Game
 	[ConCmd.Server( "restart_game" )]
 	public static void RestartGame()
 	{
+		Current._svRunCancelSource?.Cancel();
 		(ConsoleSystem.Caller.Pawn as Pawn)?.Map?.Reset();
 	}
 	
@@ -75,6 +79,7 @@ public class PuzzleGame : Game
 		foreach ( var action in actions )
 			map.Traverser.AddAction( action.ActionType, ImmutableArray.Create<object>( action.ActionArgument ) );
 		
-		map.Run();
+		Current._svRunCancelSource = new CancellationTokenSource();
+		_ = map.Run( Current._svRunCancelSource.Token );
 	}
 }
