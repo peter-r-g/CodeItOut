@@ -49,38 +49,30 @@ public partial class GridMap : Entity
 		}
 	}
 
-	public async Task Win()
+	public void Win()
 	{
+		Host.AssertServer();
+		
 		_gameOver = true;
 		State = MapState.Won;
 		
-		var entityTasks = new Task[Entities.Count + 1];
-		entityTasks[0] = Traverser.PlayWinAnimation();
-		for ( var i = 0; i < Entities.Count; i++ )
-			entityTasks[i + 1] = Entities[i].PlayWinAnimation();
-
-		// TODO: WhenAll isn't whitelisted.
-		foreach ( var task in entityTasks )
-			await task;
+		Event.Run( GridEvent.MapWonEvent );
 	}
 
-	public async Task Lose()
+	public void Lose()
 	{
+		Host.AssertServer();
+		
 		_gameOver = true;
 		State = MapState.Lost;
 		
-		var entityTasks = new Task[Entities.Count + 1];
-		entityTasks[0] = Traverser.PlayLoseAnimation();
-		for ( var i = 0; i < Entities.Count; i++ )
-			entityTasks[i + 1] = Entities[i].PlayLoseAnimation();
-
-		// TODO: WhenAll isn't whitelisted.
-		foreach ( var task in entityTasks )
-			await task;
+		Event.Run( GridEvent.MapLostEvent );
 	}
 
 	public async void Run()
 	{
+		Host.AssertServer();
+		
 		State = MapState.Running;
 		
 		for ( var i = 0; i < Traverser.ActionCount; i++ )
@@ -91,7 +83,7 @@ public partial class GridMap : Entity
 			var result = await Traverser.RunAction( i );
 			if ( result == ActionState.Failed )
 			{
-				await Lose();
+				Lose();
 				return;
 			}
 
@@ -100,7 +92,7 @@ public partial class GridMap : Entity
 		}
 
 		if ( !_gameOver )
-			await Lose();
+			Lose();
 	}
 
 	public void Reset()

@@ -46,15 +46,16 @@ public partial class GridTraverser : GridEntity
 		animation.WithVelocity( Rotation.Forward.Normal * MoveSpeed );
 	}
 	
-	public override async Task PlayWinAnimation()
+	[GridEvent.MapWon]
+	private void PlayWinAnimation()
 	{
 		
 	}
 
-	public override async Task PlayLoseAnimation()
+	[GridEvent.MapLost]
+	private void PlayLoseAnimation()
 	{
 		BecomeRagdoll();
-		await GameTask.DelaySeconds( 1 );
 	}
 
 	private void BecomeRagdoll()
