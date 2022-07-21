@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CodeItOut.Items;
 using CodeItOut.UI;
 using CodeItOut.Utility;
@@ -6,22 +7,22 @@ using Sandbox;
 
 namespace CodeItOut.Grid.Traverser;
 
-public class GridTraverser : GridEntity
+public partial class GridTraverser : GridEntity
 {
 	private const float CenterDeadzone = 0.01f;
 	private const int MoveSpeed = 100;
 	
+	[Net] private ModelEntity? Ragdoll { get; set; }
+
 	public override void Spawn()
 	{
 		base.Spawn();
-		
 		SetModel( "models/citizen/citizen.vmdl" );
 	}
 
 	public override void ClientSpawn()
 	{
 		base.ClientSpawn();
-
 		TraverserHud.Instance.Traverser = this;
 	}
 
@@ -52,9 +53,54 @@ public class GridTraverser : GridEntity
 
 	public override async Task PlayLoseAnimation()
 	{
+		BecomeRagdoll();
+		await GameTask.DelaySeconds( 1 );
 	}
 
+	private void BecomeRagdoll()
+	{
+		var ent = new ModelEntity
+		{
+			Position = Position,
+			Rotation = Rotation,
+			Scale = Scale,
+			UsePhysicsCollision = true,
+			EnableAllCollisions = true
+		};
+		ent.EnableAllCollisions = true;
+		ent.SurroundingBoundsMode = SurroundingBoundsType.Physics;
+		ent.RenderColor = RenderColor;
+		ent.PhysicsEnabled = true;
+		ent.Tags.Add( "ragdoll", "solid", "debris" );
+		ent.SetModel( GetModelName() );
+		ent.CopyBonesFrom( this );
+		ent.CopyBodyGroups( this );
+		ent.CopyMaterialGroup( this );
+		ent.CopyMaterialOverrides( this );
+		ent.TakeDecalsFrom( this );
 
+		foreach ( var child in Children )
+		{
+			if ( !child.Tags.Has( "clothes" ) ) continue;
+			if ( child is not ModelEntity e ) continue;
+
+			var model = e.GetModelName();
+
+			var clothing = new ModelEntity {RenderColor = e.RenderColor};
+			clothing.SetModel( model );
+			clothing.SetParent( ent, true );
+			clothing.CopyBodyGroups( e );
+			clothing.CopyMaterialGroup( e );
+		}
+
+		Ragdoll = ent;
+	}
+
+	public override void Reset()
+	{
+		base.Reset();
+		Ragdoll?.Delete();
+	}
 
 	protected override ActionResult MoveForward()
 	{
