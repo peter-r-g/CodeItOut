@@ -23,6 +23,7 @@ public partial class GridMap : Entity
 	public float WorldWidth => Size.X * CellSize.X;
 	public float WorldHeight => Size.Y * CellSize.Y;
 
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -43,6 +44,7 @@ public partial class GridMap : Entity
 			}
 		}
 	}
+
 
 	public async void Run()
 	{
@@ -69,7 +71,7 @@ public partial class GridMap : Entity
 	public void Reset()
 	{
 		Host.AssertServer();
-		
+
 		Traverser.Reset();
 
 		foreach ( var (startPosition, item) in Items )
@@ -171,7 +173,7 @@ public partial class GridMap : Entity
 		mapScript.Execute( fs.ReadAllText( filePath ) );
 		var map = SandScriptInterop.MapMaking.MapBuilder.Build();
 		SandScriptInterop.MapMaking.MapBuilder = new GridBuilder();
-
+		
 		return map;
 	}
 }

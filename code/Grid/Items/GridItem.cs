@@ -6,6 +6,7 @@ namespace CodeItOut.Items;
 
 public class GridItem : ModelEntity
 {
+	
 	public virtual string ItemName => "";
 	protected virtual string ModelPath => "";
 

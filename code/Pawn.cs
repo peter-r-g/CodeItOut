@@ -10,7 +10,7 @@ public partial class Pawn : Player
 	public override void Spawn()
 	{
 		base.Spawn();
-
+		
 		Map = GridMap.Load( FileSystem.Mounted, "code/Grid/Maps/main.s&s" );
 
 		Animator = null;

@@ -26,6 +26,8 @@ public class PuzzleGame : Game
 		var clothing = new ClothingContainer();
 		clothing.LoadFromClient( client );
 		clothing.DressEntity( pawn.Map.Traverser );
+	}
+	
 	[ConCmd.Client( "play_game" )]
 	public static void PlayGame()
 	{
