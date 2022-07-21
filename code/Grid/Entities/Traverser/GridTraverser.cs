@@ -8,6 +8,9 @@ namespace CodeItOut.Grid.Traverser;
 
 public class GridTraverser : GridEntity
 {
+	private const float CenterDeadzone = 0.01f;
+	private const int MoveSpeed = 100;
+	
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -22,6 +25,26 @@ public class GridTraverser : GridEntity
 		TraverserHud.Instance.Traverser = this;
 	}
 
+	protected override void UpdatePosition()
+	{
+		base.UpdatePosition();
+		
+		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
+		{
+			Log.Error( $"Failed to get cell at {GridPosition.X}, {GridPosition.Y}" );
+			return;
+		}
+		
+		var animation = new CitizenAnimationHelper( this );
+		if ( Position.Distance( cellInfo.WorldPositionCenter ) < CenterDeadzone )
+		{
+			animation.WithVelocity( Vector3.Zero );
+			return;
+		}
+
+		animation.WithVelocity( Rotation.Forward.Normal * MoveSpeed );
+	}
+	
 	protected override ActionResult MoveForward()
 	{
 		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
