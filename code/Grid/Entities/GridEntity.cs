@@ -39,7 +39,7 @@ public partial class GridEntity : AnimatedEntity
 			UpdateRotation();
 	}
 	
-	private void UpdatePosition()
+	protected virtual void UpdatePosition()
 	{
 		Host.AssertServer();
 		
@@ -61,7 +61,7 @@ public partial class GridEntity : AnimatedEntity
 			_svTimeSinceMoveStart / TravelTime );
 	}
 
-	private void UpdateRotation()
+	protected virtual void UpdateRotation()
 	{
 		Host.AssertServer();
 		
