@@ -41,6 +41,8 @@ public partial class GridCell : BaseNetworkable
 		}
 
 		Objects.Add( obj );
+		obj.GridMap = GridMap;
+		obj.Cell = this;
 		obj.Direction = dir;
 		obj.Position = GetObjectPosition( dir ) + obj.Offset;
 	}
