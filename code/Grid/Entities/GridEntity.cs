@@ -20,7 +20,7 @@ public partial class GridEntity : AnimatedEntity
 	protected virtual Direction StartDirection => Direction.Up;
 
 	public int ActionCount => _svActions.Count;
-	private readonly List<(TraverserAction, object[])> _svActions = new();
+	private readonly List<(TraverserActionType, ImmutableArray<object>)> _svActions = new();
 	
 	private const float TurnTime = 0.3f;
 	private Direction _svPreviousDirection = Direction.None;
@@ -142,10 +142,10 @@ public partial class GridEntity : AnimatedEntity
 		return true;
 	}
 
-	public void AddAction( TraverserAction action, params object[] args )
+	public void AddAction( TraverserActionType actionType, ImmutableArray<object> args )
 	{
 		Host.AssertServer();
-		_svActions.Add( (action, args) );
+		_svActions.Add( (actionType, args) );
 	}
 
 	public async Task<ActionState> RunAction( int actionIndex )
@@ -156,14 +156,14 @@ public partial class GridEntity : AnimatedEntity
 		var (action, args) = _svActions[actionIndex];
 		var actionResult = action switch
 		{
-			TraverserAction.MoveForward => MoveForward(),
-			TraverserAction.TurnLeft => TurnLeft(),
-			TraverserAction.TurnRight => TurnRight(),
-			TraverserAction.UseObject => UseObject(),
-			TraverserAction.UseItem when args.Length == 1 => UseItem( (int)args[0] ),
-			TraverserAction.PickupItem when args.Length == 1 => PickupItem( (int)args[0] ),
-			TraverserAction.DropItem when args.Length == 1 => DropItem( (int)args[0] ),
-			TraverserAction.Wait => Wait(),
+			TraverserActionType.MoveForward => MoveForward(),
+			TraverserActionType.TurnLeft => TurnLeft(),
+			TraverserActionType.TurnRight => TurnRight(),
+			TraverserActionType.UseObject => UseObject(),
+			TraverserActionType.UseItem when args.Length == 1 => UseItem( (int)args[0] ),
+			TraverserActionType.PickupItem when args.Length == 1 => PickupItem( (int)args[0] ),
+			TraverserActionType.DropItem when args.Length == 1 => DropItem( (int)args[0] ),
+			TraverserActionType.Wait => Wait(),
 			_ => throw new ArgumentOutOfRangeException( nameof(action), action, null )
 		};
 		if ( actionResult.ActionState == ActionState.Failed )

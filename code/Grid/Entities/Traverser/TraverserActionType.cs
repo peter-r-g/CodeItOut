@@ -1,6 +1,6 @@
 ﻿namespace CodeItOut.Grid.Traverser;
 
-public enum TraverserAction
+public enum TraverserActionType
 {
 	MoveForward,
 	TurnLeft,
