@@ -35,6 +35,12 @@ public class PuzzleGame : Game
 		SubmitSolution( text );
 	}
 
+	[ConCmd.Server( "restart_game" )]
+	public static void RestartGame()
+	{
+		(ConsoleSystem.Caller.Pawn as Pawn)?.Map?.Reset();
+	}
+
 	[ConCmd.Server]
 	public static void SubmitSolution( string text )
 	{
