@@ -16,7 +16,7 @@ public partial class DoorObject : GridObject
 		Scale = 0.1f;
 	}
 
-	public override bool Use( GridEntity user, GridItem usedItem, out bool itemUsed )
+	public override bool Use( GridEntity user, GridItem? usedItem, out bool itemUsed )
 	{
 		itemUsed = false;
 		if ( usedItem is null && Open )
