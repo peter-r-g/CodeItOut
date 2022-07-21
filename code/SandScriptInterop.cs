@@ -85,7 +85,7 @@ public static class SandScriptInterop
 	
 	#endregion
 
-	#region Map Making
+	#region Map Making Methods
 
 	public class MapMaking
 	{
