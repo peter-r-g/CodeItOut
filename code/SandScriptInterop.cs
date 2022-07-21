@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using CodeItOut.Grid;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
-using Sandbox;
 using SandScript;
 
 namespace CodeItOut;
@@ -13,15 +13,14 @@ public static class SandScriptInterop
 	
 	public class Gameplay
 	{
+		public static readonly List<TraverserAction> ClActions = new();
+		
 		[ScriptMethod( "TurnLeft" )]
 		[ScriptMethodParameter( 0, "script", typeof(Script) )]
 		[ScriptMethodReturn( typeof(void) )]
 		public static void TurnLeft( Script script )
 		{
-			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
-				return;
-
-			pawn.Map.Traverser.AddAction( TraverserAction.TurnLeft );
+			ClActions.Add( new TraverserAction( TraverserActionType.TurnLeft ) );
 		}
 
 		[ScriptMethod( "TurnRight" )]
@@ -29,10 +28,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void TurnRight( Script script )
 		{
-			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
-				return;
-
-			pawn.Map.Traverser.AddAction( TraverserAction.TurnRight );
+			ClActions.Add( new TraverserAction( TraverserActionType.TurnRight ) );
 		}
 
 		[ScriptMethod( "MoveForward" )]
@@ -40,10 +36,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void MoveForward( Script script )
 		{
-			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
-				return;
-
-			pawn.Map.Traverser.AddAction( TraverserAction.MoveForward );
+			ClActions.Add( new TraverserAction( TraverserActionType.MoveForward ) );
 		}
 
 		[ScriptMethod( "UseObject" )]
@@ -51,10 +44,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void UseObject( Script script )
 		{
-			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
-				return;
-
-			pawn.Map.Traverser.AddAction( TraverserAction.UseObject );
+			ClActions.Add( new TraverserAction( TraverserActionType.UseObject ) );
 		}
 
 		[ScriptMethod( "UseItem" )]
@@ -63,10 +53,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void UseItem( Script script, double indexToUse )
 		{
-			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
-				return;
-
-			pawn.Map.Traverser.AddAction( TraverserAction.UseItem, (int)indexToUse );
+			ClActions.Add( new TraverserAction( TraverserActionType.UseItem, (int)indexToUse ) );
 		}
 
 		[ScriptMethod( "PickupItem" )]
@@ -75,10 +62,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void PickupItem( Script script, double indexToPlaceIn )
 		{
-			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
-				return;
-
-			pawn.Map.Traverser.AddAction( TraverserAction.PickupItem, (int)indexToPlaceIn );
+			ClActions.Add( new TraverserAction( TraverserActionType.PickupItem, (int)indexToPlaceIn ) );
 		}
 
 		[ScriptMethod( "DropItem" )]
@@ -87,10 +71,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void DropItem( Script script, double indexToDrop )
 		{
-			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
-				return;
-
-			pawn.Map.Traverser.AddAction( TraverserAction.DropItem, (int)indexToDrop );
+			ClActions.Add( new TraverserAction( TraverserActionType.DropItem, (int)indexToDrop ) );
 		}
 
 		[ScriptMethod( "Wait" )]
@@ -98,10 +79,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void Wait( Script script )
 		{
-			if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Pawn pawn )
-				return;
-
-			pawn.Map.Traverser.AddAction( TraverserAction.Wait );
+			ClActions.Add( new TraverserAction( TraverserActionType.Wait ) );
 		}
 	}
 	
