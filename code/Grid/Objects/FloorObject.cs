@@ -1,17 +1,15 @@
-﻿namespace CodeItOut.Grid;
+﻿using Sandbox;
+
+namespace CodeItOut.Grid;
 
 public class FloorObject : GridObject
 {
 	protected override string ModelName => "models/maya_testcube_100.vmdl";
 	public override Vector3 Offset => new(0, 0, -100);
 
-	public override void Spawn()
+	[Event.Tick.Client]
+	private void Tick()
 	{
-		base.Spawn();
-
-		do
-		{
-			RenderColor = Color.Random;
-		} while ( RenderColor == Color.Red );
+		DebugOverlay.Box( this, Color.Black, 0.1f );
 	}
 }
