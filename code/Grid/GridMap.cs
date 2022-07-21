@@ -10,6 +10,8 @@ namespace CodeItOut.Grid;
 
 public partial class GridMap : Entity
 {
+	[Net] public MapState State { get; private set; }
+	
 	[Net] public IntVector2 CellSize { get; set; }
 	[Net] public IntVector2 Size { get; set; }
 	[Net] public IntVector2 StartPosition { get; set; }
@@ -29,6 +31,7 @@ public partial class GridMap : Entity
 	{
 		base.Spawn();
 
+		State = MapState.NotStarted;
 		Traverser = new GridTraverser {GridMap = this, Owner = this};
 	}
 	
@@ -49,6 +52,8 @@ public partial class GridMap : Entity
 	public async Task Win()
 	{
 		_gameOver = true;
+		State = MapState.Won;
+		
 		var entityTasks = new Task[Entities.Count + 1];
 		entityTasks[0] = Traverser.PlayWinAnimation();
 		for ( var i = 0; i < Entities.Count; i++ )
@@ -65,6 +70,8 @@ public partial class GridMap : Entity
 	public async Task Lose()
 	{
 		_gameOver = true;
+		State = MapState.Lost;
+		
 		var entityTasks = new Task[Entities.Count + 1];
 		entityTasks[0] = Traverser.PlayLoseAnimation();
 		for ( var i = 0; i < Entities.Count; i++ )
@@ -80,6 +87,8 @@ public partial class GridMap : Entity
 
 	public async void Run()
 	{
+		State = MapState.Running;
+		
 		for ( var i = 0; i < Traverser.ActionCount; i++ )
 		{
 			if ( _gameOver )
@@ -105,6 +114,7 @@ public partial class GridMap : Entity
 		Host.AssertServer();
 
 		_gameOver = false;
+		State = MapState.NotStarted;
 		Traverser.Reset();
 
 		foreach ( var (startPosition, item) in Items )
