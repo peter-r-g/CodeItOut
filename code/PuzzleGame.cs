@@ -7,14 +7,12 @@ public class PuzzleGame : Game
 {
 	public new static PuzzleGame Current => Sandbox.Game.Current as PuzzleGame;
 	public readonly PuzzleGameHud Hud;
-	public readonly FileWatch InputFileWatch;
 
 	public PuzzleGame()
 	{
 		if ( !Host.IsClient )
 			return;
 		
-		InputFileWatch = FileSystem.Data.Watch( "input.s&s" );
 		Hud = new PuzzleGameHud();
 	}
 
