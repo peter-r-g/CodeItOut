@@ -37,8 +37,7 @@ public class GridTraverser : GridEntity
 		if ( !targetCellInfo.CanMove[Direction.Opposite()] )
 			return ActionResult.Fail();
 
-		return ActionResult.Success( newGridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
+		return ActionResult.Success( newGridPosition, Direction );
 	}
 
 	protected override ActionResult TurnLeft()
@@ -47,8 +46,7 @@ public class GridTraverser : GridEntity
 		if ( newDirection < (byte)Direction.Up )
 			newDirection = (byte)Direction.Left;
 
-		return ActionResult.Success( GridPosition, (Direction)newDirection, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
+		return ActionResult.Success( GridPosition, (Direction)newDirection );
 	}
 
 	protected override ActionResult TurnRight()
@@ -57,8 +55,7 @@ public class GridTraverser : GridEntity
 		if ( newDirection > (byte)Direction.Left )
 			newDirection = (byte)Direction.Up;
 
-		return ActionResult.Success( GridPosition, (Direction)newDirection, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
+		return ActionResult.Success( GridPosition, (Direction)newDirection );
 	}
 
 	protected override ActionResult UseObject()
@@ -69,8 +66,7 @@ public class GridTraverser : GridEntity
 		foreach ( var obj in cellInfo.GetObjectsInDirection( Direction ) )
 		{
 			if ( obj.Use( this, null, out _ ) )
-				return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-					ArraySegment<GridItem>.Empty );
+				return ActionResult.Success( GridPosition, Direction );
 		}
 
 		return ActionResult.Fail();
@@ -89,13 +85,13 @@ public class GridTraverser : GridEntity
 	{
 		return !TryPickupItem( indexToPlaceIn, out var pickedUpItem )
 			? ActionResult.Fail()
-			: ActionResult.Success( GridPosition, Direction, new[] {pickedUpItem}, ArraySegment<GridItem>.Empty );
+			: ActionResult.Success( GridPosition, Direction, new[] {pickedUpItem} );
 	}
 
 	protected override ActionResult DropItem( int indexToDrop )
 	{
 		return !TryDropItem( indexToDrop, out var droppedItem )
 			? ActionResult.Fail()
-			: ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty, new[] {droppedItem} );
+			: ActionResult.Success( GridPosition, Direction, null, new[] {droppedItem} );
 	}
 }

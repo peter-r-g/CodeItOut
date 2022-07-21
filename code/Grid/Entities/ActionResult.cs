@@ -14,8 +14,11 @@ public class ActionResult
 	public readonly IEnumerable<GridItem> LostItems;
 
 	private ActionResult( ActionState actionState, IntVector2 gridPosition, Direction direction,
-		IEnumerable<GridItem> gainedItems, IEnumerable<GridItem> lostItems )
+		IEnumerable<GridItem>? gainedItems = null, IEnumerable<GridItem>? lostItems = null )
 	{
+		gainedItems ??= ArraySegment<GridItem>.Empty;
+		lostItems ??= ArraySegment<GridItem>.Empty;
+		
 		ActionState = actionState;
 		GridPosition = gridPosition;
 		Direction = direction;
@@ -23,14 +26,14 @@ public class ActionResult
 		LostItems = lostItems;
 	}
 
-	public static ActionResult Success( IntVector2 gridPosition, Direction direction, IEnumerable<GridItem> gainedItems, IEnumerable<GridItem> lostItems )
+	public static ActionResult Success( IntVector2 gridPosition, Direction direction,
+		IEnumerable<GridItem>? gainedItems = null, IEnumerable<GridItem>? lostItems = null )
 	{
 		return new ActionResult( ActionState.Succeeded, gridPosition, direction, gainedItems, lostItems );
 	}
 
 	public static ActionResult Fail()
 	{
-		return new ActionResult( ActionState.Failed, IntVector2.Zero, Direction.None, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
+		return new ActionResult( ActionState.Failed, IntVector2.Zero, Direction.None );
 	}
 }
