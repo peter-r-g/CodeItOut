@@ -93,12 +93,15 @@ public partial class GridTraverser : GridEntity
 		}
 
 		Ragdoll = ent;
+		EnableDrawing = false;
 	}
 
 	public override void Reset()
 	{
 		base.Reset();
+		
 		Ragdoll?.Delete();
+		EnableDrawing = true;
 	}
 
 	protected override ActionResult MoveForward()
