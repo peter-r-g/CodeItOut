@@ -61,16 +61,15 @@ public partial class GridTraverser : GridEntity
 	{
 		var ent = new ModelEntity
 		{
+			EnableAllCollisions = true,
 			Position = Position,
 			Rotation = Rotation,
 			Scale = Scale,
 			UsePhysicsCollision = true,
-			EnableAllCollisions = true
+			PhysicsEnabled = true,
+			SurroundingBoundsMode = SurroundingBoundsType.Physics,
+			RenderColor = RenderColor
 		};
-		ent.EnableAllCollisions = true;
-		ent.SurroundingBoundsMode = SurroundingBoundsType.Physics;
-		ent.RenderColor = RenderColor;
-		ent.PhysicsEnabled = true;
 		ent.Tags.Add( "ragdoll", "solid", "debris" );
 		ent.SetModel( GetModelName() );
 		ent.CopyBonesFrom( this );
