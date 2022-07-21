@@ -1,0 +1,112 @@
+﻿/*
+    Constants for the map.
+*/
+// Constants for the grid size of the map.
+number SIZE_X = 1;
+number SIZE_Y = 5;
+// Constants for the size of cells in source units.
+number CELL_SIZE_X = 100;
+number CELL_SIZE_Y = 100;
+// Constants for the player start position.
+number START_POSITION_X = 0;
+number START_POSITION_Y = 0;
+// Constant for the max amount of items the player can carry.
+number ITEM_CAP = 1;
+
+/*
+    Helper variables for direction translation to C#.
+*/
+string DIRECTION_UP = "up";
+string DIRECTION_RIGHT = "right";
+string DIRECTION_DOWN = "down";
+string DIRECTION_LEFT = "left";
+
+/*
+    Helper variables for the PlaceCorner method
+*/
+number TOP_LEFT = 0;
+number TOP_RIGHT = 1;
+number BOTTOM_LEFT = 2;
+number BOTTOM_RIGHT = 3;
+
+/*
+    Helper function to place all walls for a grid location.
+*/
+void PlaceWalls( number x, number y, bool up, bool down, bool left, bool right )
+{
+    if ( up )
+        PlaceWall( x, y, "up" );
+    
+    if ( down )
+        PlaceWall( x, y, "down" );
+        
+    if ( left )
+        PlaceWall( x, y, "left" );
+        
+    if ( right )
+        PlaceWall( x, y, "right" );
+}
+
+/*
+    Places two walls in a corner shape.
+*/
+void PlaceCorner( number x, number y, number corner )
+{
+    if ( corner == TOP_LEFT )
+        PlaceWalls( x, y, true, false, true, false );
+    else if ( corner == TOP_RIGHT )
+        PlaceWalls( x, y, true, false, false, true );
+    else if ( corner == BOTTOM_LEFT )
+        PlaceWalls( x, y, false, true, true, false );
+    else if ( corner == BOTTOM_RIGHT )
+        PlaceWalls( x, y, false, true, false, true );
+}
+
+/*
+    Places a horizontal hallway from start position to the ending X.
+*/
+void PlaceHorizontalHallway( number x, number y, number xOffset )
+{
+    for ( var currentX = x; currentX < x + xOffset; currentX += 1 )
+        PlaceWalls( currentX, y, true, true, false, false );
+}
+
+/*
+    Places a vertical hallway from start position to the ending Y.
+*/
+void PlaceVerticalHallway( number x, number y, number yOffset )
+{
+    for ( var currentY = y; currentY < y + yOffset; currentY += 1 )
+        PlaceWalls( x, currentY, false, false, true, true );
+}
+
+/*
+    Main method to build the map.
+*/
+void Main()
+{
+    // Map setup.
+    SetSize( SIZE_X, SIZE_Y );
+    SetCellSize( CELL_SIZE_X, CELL_SIZE_Y );
+    SetStartPosition( START_POSITION_X, START_POSITION_Y );
+    SetItemCap( ITEM_CAP );
+    
+    // Place floors everywhere.
+    for ( var x = 0; x < SIZE_X; x += 1 )
+        for ( var y = 0; y < SIZE_Y; y += 1 )
+            PlaceFloor( x, y );
+    
+    // Start location.
+    PlaceWalls( 0, 0, false, true, true, true );
+    
+    // First hallway.
+    PlaceVerticalHallway( 0, 1, 3 );
+    PlaceWalls( 0, 4, true, false, true, true );
+
+    // Key items.
+    PlaceKey( 0, 2 );
+    PlaceLockedExit( 0, 4, DIRECTION_UP );
+}
+
+// Call the main method.
+Main();

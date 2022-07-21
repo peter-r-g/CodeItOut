@@ -11,7 +11,7 @@ public partial class Pawn : Player
 	{
 		base.Spawn();
 		
-		Map = GridMap.Load( FileSystem.Mounted, "maps/level1.s&s" );
+		Map = GridMap.Load( FileSystem.Mounted, "maps/level0.s&s" );
 
 		Animator = null;
 		CameraMode = new LookAtCamera
