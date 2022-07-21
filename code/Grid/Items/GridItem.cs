@@ -10,8 +10,8 @@ public partial class GridItem : ModelEntity
 	public virtual string ItemName => "";
 	protected virtual string ModelPath => "";
 
-	private GridEntity _svHolder;
-	private GridCell _svCurrentGridCell;
+	private GridEntity? _svHolder;
+	private GridCell? _svCurrentGridCell;
 
 	public override void Spawn()
 	{
