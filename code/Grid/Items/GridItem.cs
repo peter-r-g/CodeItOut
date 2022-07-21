@@ -1,11 +1,11 @@
 ﻿using CodeItOut.Grid;
-using CodeItOut.Grid.Traverser;
 using Sandbox;
 
 namespace CodeItOut.Items;
 
-public class GridItem : ModelEntity
+public partial class GridItem : ModelEntity
 {
+	[Net] public GridMap GridMap { get; set; }
 	
 	public virtual string ItemName => "";
 	protected virtual string ModelPath => "";
