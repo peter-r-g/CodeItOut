@@ -43,15 +43,19 @@ public partial class GridTraverser : GridEntity
 		animation.WithVelocity( Rotation.Forward.Normal * MoveSpeed );
 	}
 	
-	[GridEvent.MapWon]
-	private void PlayWinAnimation()
+	[GridEvent.MapWon.Server]
+	private void PlayWinAnimation( GridMap map )
 	{
-		
+		if ( map != GridMap )
+			return;
 	}
 
-	[GridEvent.MapLost]
-	private void PlayLoseAnimation()
+	[GridEvent.MapLost.Server]
+	private void PlayLoseAnimation( GridMap map )
 	{
+		if ( map != GridMap )
+			return;
+		
 		BecomeRagdoll();
 	}
 
