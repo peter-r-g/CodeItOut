@@ -14,8 +14,6 @@ public partial class Pawn : Player
 	public override void Spawn()
 	{
 		base.Spawn();
-		
-		LoadCurrentLevel();
 
 		Animator = null;
 		CameraMode = new LookAtCamera
@@ -60,12 +58,16 @@ public partial class Pawn : Player
 		LoadCurrentLevel();
 	}
 
-	private void LoadCurrentLevel()
+	public void LoadCurrentLevel()
 	{
 		Host.AssertServer();
 		
 		Map = GridMap.Load( FileSystem.Mounted, $"maps/level{Level}.s&s" );
 		Map.Reset();
+		
+		var clothing = new ClothingContainer();
+		clothing.LoadFromClient( Client );
+		clothing.DressEntity( Map?.Traverser );
 	}
 
 	[GridEvent.MapReady.Server]

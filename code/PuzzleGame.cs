@@ -29,10 +29,7 @@ public class PuzzleGame : Game
 
 		var pawn = new Pawn();
 		client.Pawn = pawn;
-		
-		var clothing = new ClothingContainer();
-		clothing.LoadFromClient( client );
-		clothing.DressEntity( pawn.Map?.Traverser );
+		pawn.LoadCurrentLevel();
 	}
 	
 	[ConCmd.Client( "play_game" )]
