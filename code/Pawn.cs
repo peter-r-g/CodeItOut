@@ -5,6 +5,9 @@ namespace CodeItOut;
 
 public partial class Pawn : Player
 {
+	[ConVar.Client( "grid_debug" )]
+	public static bool GridDebugEnabled { get; set; }
+	
 	[Net] public GridMap? Map { get; private set; }
 
 	public override void Spawn()
@@ -36,11 +39,9 @@ public partial class Pawn : Player
 	public override void FrameSimulate( Client cl )
 	{
 		base.FrameSimulate( cl );
-		
+
 		if ( GridDebugEnabled )
 			Map?.FrameSimulate( cl );
 	}
 
-	[ConVar.Client( "grid_debug" )]
-	public static bool GridDebugEnabled { get; set; }
 }
