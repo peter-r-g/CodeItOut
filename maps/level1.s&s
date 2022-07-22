@@ -2,7 +2,7 @@
     Constants for the map.
 */
 // Constants for the grid size of the map.
-number SIZE_X = 1;
+number SIZE_X = 5;
 number SIZE_Y = 5;
 // Constants for the size of cells in source units.
 number CELL_SIZE_X = 100;
