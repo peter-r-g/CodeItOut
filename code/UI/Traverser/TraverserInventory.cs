@@ -15,7 +15,7 @@ public class TraverserInventory : Panel
 		base.Tick();
 
 		var traverser = TraverserHud.Traverser;
-		var items = traverser.GetItems();
+		var items = traverser.Items;
 		for ( var i = _slots.Count; i < items.Count; i++ )
 			_slots.Add( new InventoryIcon( i, this ) );
 		
