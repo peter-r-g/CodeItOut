@@ -52,6 +52,21 @@ public partial class GridMap : Entity
 		}
 	}
 
+	public void Cleanup()
+	{
+		Traverser.Delete();
+		foreach ( var entity in Entities )
+			entity.Delete();
+		
+		foreach ( var pair in Items )
+			pair.Value.Delete();
+
+		foreach ( var cell in CellData )
+			cell.Cleanup();
+		
+		Delete();
+	}
+
 	public void Win()
 	{
 		Host.AssertServer();

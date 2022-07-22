@@ -29,6 +29,12 @@ public partial class GridCell : BaseNetworkable
 		CanMove.Add( Direction.Left, false );
 	}
 
+	public void Cleanup()
+	{
+		foreach ( var obj in Objects )
+			obj.Delete();
+	}
+
 	public void AddObject( Direction dir, GridObject obj )
 	{
 		Host.AssertServer();
