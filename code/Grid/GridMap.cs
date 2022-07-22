@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using CodeItOut.Grid.Traverser;
@@ -190,9 +191,9 @@ public partial class GridMap : Entity
 
 	public void PlaceEntityAt( int x, int y, GridEntity entity )
 	{
-		if ( !TryGetCellAt( x, y, out var cellInfo ) )
+		if ( !TryGetCellAt( x, y, out _ ) )
 		{
-			Log.Error( $"Failed to place entity to {{x}}, {y} because the X, Y provided is not valid." );
+			Log.Error( $"Failed to place entity to {x}, {y} because the X, Y provided is not valid." );
 			return;
 		}
 
@@ -200,7 +201,7 @@ public partial class GridMap : Entity
 		Entities.Add( entity );
 	}
 
-	public bool TryGetCellAt( int x, int y, out GridCell gridCell )
+	public bool TryGetCellAt( int x, int y, [NotNullWhen( true )] out GridCell? gridCell )
 	{
 		if ( !IsValidPosition( x, y ) )
 		{
@@ -212,7 +213,7 @@ public partial class GridMap : Entity
 		return true;
 	}
 
-	public bool TryGetCellInDirection( int x, int y, Direction dir, out GridCell gridCell )
+	public bool TryGetCellInDirection( int x, int y, Direction dir, [NotNullWhen( true )] out GridCell? gridCell )
 	{
 		if ( !IsValidPosition( x, y ) )
 		{
