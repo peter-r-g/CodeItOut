@@ -57,6 +57,15 @@ public class PuzzleGame : Game
 		SubmitSolution( json );
 	}
 
+	[ConCmd.Server( "next_level" )]
+	public static void NextLevel()
+	{
+		if ( ConsoleSystem.Caller.Pawn is not Pawn {Map.State: MapState.Won} pawn )
+			return;
+
+		pawn.NextLevel();
+	}
+
 	[ConCmd.Server( "restart_game" )]
 	public static void RestartGame()
 	{

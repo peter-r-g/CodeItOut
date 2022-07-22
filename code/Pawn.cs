@@ -8,19 +8,20 @@ public partial class Pawn : Player
 	[ConVar.Client( "grid_debug" )]
 	public static bool GridDebugEnabled { get; set; }
 	
+	[Net] public int Level { get; private set; }
 	[Net] public GridMap? Map { get; private set; }
 
 	public override void Spawn()
 	{
 		base.Spawn();
 		
-		Map = GridMap.Load( FileSystem.Mounted, "maps/level0.s&s" );
+		LoadCurrentLevel();
 
 		Animator = null;
 		CameraMode = new LookAtCamera
 		{
 			LerpSpeed = 0,
-			TargetEntity = Map.Traverser,
+			TargetEntity = Map?.Traverser,
 			TargetOffset = new Vector3( 0, 0, 50 )
 		};
 		Controller = null;
@@ -48,6 +49,19 @@ public partial class Pawn : Player
 
 		if ( GridDebugEnabled )
 			Map?.FrameSimulate( cl );
+	}
+
+	public void NextLevel()
+	{
+		Level++;
+		Map?.Cleanup();
+		LoadCurrentLevel();
+	}
+
+	private void LoadCurrentLevel()
+	{
+		Host.AssertServer();
+		Map = GridMap.Load( FileSystem.Mounted, $"maps/level{Level}.s&s" );
 	}
 
 	[GridEvent.MapReady.Server]
