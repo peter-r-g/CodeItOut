@@ -50,4 +50,31 @@ public partial class Pawn : Player
 			Map?.FrameSimulate( cl );
 	}
 
+	[GridEvent.MapReady.Server]
+	private void MapReady( GridMap map )
+	{
+		if ( map != Map )
+			return;
+
+		CameraMode = new LookAtCamera
+		{
+			LerpSpeed = 0,
+			TargetEntity = map.Traverser,
+			TargetOffset = new Vector3( 0, 0, 50 )
+		};
+	}
+
+	[GridEvent.MapStart.Server]
+	private void MapStart( GridMap map )
+	{
+		if ( map != Map )
+			return;
+		
+		CameraMode = new LookAtCamera
+		{
+			LerpSpeed = 0,
+			TargetEntity = map.Traverser,
+			TargetOffset = new Vector3( 0, 0, 50 )
+		};
+	}
 }
