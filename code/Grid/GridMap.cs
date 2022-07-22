@@ -127,6 +127,8 @@ public partial class GridMap : Entity
 
 		foreach ( var cell in CellData )
 			cell.Reset();
+		Event.Run( GridEvent.MapReady.ServerEvent, this );
+		Event.Run( GridEvent.MapReadyEvent, this );
 	}
 
 	public bool IsValidPosition( int x, int y )

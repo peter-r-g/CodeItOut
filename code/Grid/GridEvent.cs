@@ -4,6 +4,33 @@ namespace CodeItOut.Grid;
 
 public static class GridEvent
 {
+	#region MapReady
+	
+	public const string MapReadyEvent = "codeitout.MapReady";
+
+	public static class MapReady
+	{
+		public const string ServerEvent = MapReadyEvent + ".Server";
+		public const string ClientEvent = MapReadyEvent + ".Client";
+		
+		public class ServerAttribute : EventAttribute
+		{
+			public ServerAttribute() : base( ServerEvent ) { }
+		}
+		
+		public class ClientAttribute : EventAttribute
+		{
+			public ClientAttribute() : base( ClientEvent ) { }
+		}
+	}
+	
+	public class MapReadyAttribute : EventAttribute
+	{
+		public MapReadyAttribute() : base( MapReadyEvent ) { }
+	}
+
+	#endregion
+	
 	#region MapWon
 	
 	public const string MapWonEvent = "codeitout.MapWon";
