@@ -40,6 +40,12 @@ public partial class Pawn : Player
 	{
 		base.FrameSimulate( cl );
 
+		if ( Map is not null )
+		{
+			if ( Map.State == MapState.Running && CameraMode is LookAtCamera camera )
+				camera.Origin = Map.Traverser.Position + new Vector3( 0, -150, 150 );
+		}
+
 		if ( GridDebugEnabled )
 			Map?.FrameSimulate( cl );
 	}
