@@ -59,7 +59,8 @@ public partial class GridMap : Entity
 		_gameOver = true;
 		State = MapState.Won;
 		
-		Event.Run( GridEvent.MapWonEvent );
+		Event.Run( GridEvent.MapWon.ServerEvent, this );
+		Event.Run( GridEvent.MapWonEvent, this );
 	}
 
 	public void Lose()
