@@ -20,6 +20,12 @@ public partial class GridItem : ModelEntity
 		SetModel( ModelPath );
 	}
 
+	public virtual bool Use( GridEntity holder )
+	{
+		Host.AssertServer();
+		return false;
+	}
+
 	public virtual void OnPickup( GridEntity holder )
 	{
 		Host.AssertServer();
