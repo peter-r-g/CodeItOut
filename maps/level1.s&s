@@ -35,16 +35,16 @@ number BOTTOM_RIGHT = 3;
 void PlaceWalls( number x, number y, bool up, bool down, bool left, bool right )
 {
     if ( up )
-        PlaceWall( x, y, "up" );
+        PlaceWall( x, y, DIRECTION_UP );
     
     if ( down )
-        PlaceWall( x, y, "down" );
+        PlaceWall( x, y, DIRECTION_DOWN );
         
     if ( left )
-        PlaceWall( x, y, "left" );
+        PlaceWall( x, y, DIRECTION_LEFT );
         
     if ( right )
-        PlaceWall( x, y, "right" );
+        PlaceWall( x, y, DIRECTION_RIGHT );
 }
 
 /*
