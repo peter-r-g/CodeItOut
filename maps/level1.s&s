@@ -97,29 +97,32 @@ void BuildMetaInformation()
 */
 void Build()
 {
-    // Place floors everywhere.
-    for ( var x = 0; x < SIZE_X; x += 1 )
-        for ( var y = 0; y < SIZE_Y; y += 1 )
-            PlaceFloor( x, y );
-    
     // Start location.
     PlaceWalls( 0, 0, false, true, true, true );
+    PlaceFloor( 0, 0 );
     
     // First hallway.
     PlaceCorner( 0, 1, TOP_LEFT );
     PlaceHorizontalHallway( 1, 1, 3 );
+    for ( var x = 0; x < SIZE_X; x += 1 )
+        PlaceFloor( x, 1 )
     
     // Second hallway.
     PlaceCorner( 4, 1, BOTTOM_RIGHT );
     PlaceWalls( 4, 2, false, false, true, true );
+    for ( var y = 1; y < 3; y += 1 )
+        PlaceFloor( 4, y );
     
     // Third hallway.
     PlaceCorner( 4, 3, TOP_RIGHT );
     PlaceHorizontalHallway( 1, 3, 3 );
+    for ( var x = 0; x < SIZE_X; x += 1 )
+        PlaceFloor( x, 3 );
     
     // Fourth hallway.
     PlaceCorner( 0, 3, BOTTOM_LEFT );
     PlaceWalls( 0, 4, false, false, true, true );
+    PlaceFloor( 0, 4 )
     
     // Key items.
     PlaceKey( 4, 2 );
