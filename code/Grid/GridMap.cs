@@ -235,6 +235,8 @@ public partial class GridMap : Entity
 		var mapScript = new Script();
 		mapScript.AddClassMethods<SandScriptInterop.MapMaking>();
 		mapScript.Execute( fs.ReadAllText( filePath ) );
+		mapScript.Call( mapScript.Globals["BuildMetaInformation()"] );
+		mapScript.Call( mapScript.Globals["Build()"] );
 		var map = SandScriptInterop.MapMaking.MapBuilder.Build();
 		SandScriptInterop.MapMaking.MapBuilder = new GridBuilder();
 		

@@ -81,16 +81,22 @@ void PlaceVerticalHallway( number x, number y, number yOffset )
 }
 
 /*
-    Main method to build the map.
+    Sets all meta map information.
 */
-void Main()
+void BuildMetaInformation()
 {
     // Map setup.
     SetSize( SIZE_X, SIZE_Y );
     SetCellSize( CELL_SIZE_X, CELL_SIZE_Y );
     SetStartPosition( START_POSITION_X, START_POSITION_Y );
     SetItemCap( ITEM_CAP );
-    
+}
+
+/*
+    Builds the objects, items, and entities of the map.
+*/
+void Build()
+{
     // Place floors everywhere.
     for ( var x = 0; x < SIZE_X; x += 1 )
         for ( var y = 0; y < SIZE_Y; y += 1 )
@@ -119,6 +125,3 @@ void Main()
     PlaceKey( 4, 2 );
     PlaceLockedExit( 0, 4, DIRECTION_UP );
 }
-
-// Call the main method.
-Main();
