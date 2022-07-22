@@ -69,7 +69,8 @@ public partial class GridMap : Entity
 		_gameOver = true;
 		State = MapState.Lost;
 		
-		Event.Run( GridEvent.MapLostEvent );
+		Event.Run( GridEvent.MapLost.ServerEvent, this );
+		Event.Run( GridEvent.MapLostEvent, this );
 	}
 
 	public async Task Run( CancellationToken cancellationToken )
