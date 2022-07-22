@@ -78,6 +78,9 @@ public partial class GridMap : Entity
 		
 		State = MapState.Running;
 		
+		Event.Run( GridEvent.MapStart.ServerEvent, this );
+		Event.Run( GridEvent.MapStartEvent, this );
+		
 		for ( var i = 0; i < Traverser.ActionCount; i++ )
 		{
 			if ( _gameOver || cancellationToken.IsCancellationRequested )

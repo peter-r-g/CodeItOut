@@ -31,6 +31,33 @@ public static class GridEvent
 
 	#endregion
 	
+	#region MapStart
+
+	public const string MapStartEvent = "codeitout.MapStart";
+
+	public static class MapStart
+	{
+		public const string ServerEvent = MapStartEvent + ".Server";
+		public const string ClientEvent = MapStartEvent + ".Client";
+		
+		public class ServerAttribute : EventAttribute
+		{
+			public ServerAttribute() : base( ServerEvent ) { }
+		}
+		
+		public class ClientAttribute : EventAttribute
+		{
+			public ClientAttribute() : base( ClientEvent ) { }
+		}
+	}
+	
+	public class MapStartAttribute : EventAttribute
+	{
+		public MapStartAttribute() : base( MapStartEvent ) { }
+	}
+
+	#endregion
+	
 	#region MapWon
 	
 	public const string MapWonEvent = "codeitout.MapWon";
