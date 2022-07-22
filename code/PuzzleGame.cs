@@ -83,7 +83,12 @@ public class PuzzleGame : Game
 			return;
 
 		foreach ( var action in actions )
-			map.Traverser.AddAction( action.ActionType, ImmutableArray.Create<object>( action.ActionArgument ) );
+		{
+			map.Traverser.AddAction( action.ActionType,
+				action.ActionArgument is null
+					? ImmutableArray<object>.Empty
+					: ImmutableArray.Create<object>( action.ActionArgument ) );
+		}
 		
 		Current._svRunCancelSource = new CancellationTokenSource();
 		_ = map.Run( Current._svRunCancelSource.Token );
