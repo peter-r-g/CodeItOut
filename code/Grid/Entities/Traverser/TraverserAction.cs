@@ -11,13 +11,13 @@ public class TraverserAction
 	public TraverserActionType ActionType;
 	[JsonInclude]
 	[JsonPropertyName( "b" )]
-	public int ActionArgument;
+	public int? ActionArgument;
 
 	public TraverserAction()
 	{
 	}
 
-	public TraverserAction( TraverserActionType actionType, int argument = -1 )
+	public TraverserAction( TraverserActionType actionType, int? argument = null )
 	{
 		ActionType = actionType;
 		ActionArgument = argument;
