@@ -1,4 +1,5 @@
-﻿using CodeItOut.Grid;
+﻿using System.Runtime.InteropServices.ComTypes;
+using CodeItOut.Grid;
 using Sandbox;
 
 namespace CodeItOut;
@@ -29,10 +30,13 @@ public partial class Pawn : Player
 	public override void Simulate( Client cl )
 	{
 		base.Simulate( cl );
-		if ( Map is null || CameraMode is not LookAtCamera camera )
+		if ( Map is null )
 			return;
-
-		camera.Origin = Map.Traverser.Position + new Vector3( 0, -150, 150 );
+		
+		Map.Simulate( cl );
+		
+		if ( CameraMode is LookAtCamera camera )
+			camera.Origin = Map.Traverser.Position + new Vector3( 0, -150, 150 );
 	}
 
 	public override void FrameSimulate( Client cl )
