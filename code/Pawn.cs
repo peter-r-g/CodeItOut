@@ -53,6 +53,8 @@ public partial class Pawn : Player
 
 	public void NextLevel()
 	{
+		Host.AssertServer();
+		
 		Level++;
 		Map?.Cleanup();
 		LoadCurrentLevel();
@@ -61,6 +63,7 @@ public partial class Pawn : Player
 	private void LoadCurrentLevel()
 	{
 		Host.AssertServer();
+		
 		Map = GridMap.Load( FileSystem.Mounted, $"maps/level{Level}.s&s" );
 		Map.Reset();
 	}
