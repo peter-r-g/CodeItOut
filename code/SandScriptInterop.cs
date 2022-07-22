@@ -47,6 +47,15 @@ public static class SandScriptInterop
 			ClActions.Add( new TraverserAction( TraverserActionType.UseObject ) );
 		}
 
+		[ScriptMethod( "UseObject" )]
+		[ScriptMethodParameter( 0, "script", typeof(Script) )]
+		[ScriptMethodParameter( 1, "itemIndexToUse", typeof(double) )]
+		[ScriptMethodReturn( typeof(void) )]
+		public static void UseObject( Script script, double itemIndexToUse )
+		{
+			ClActions.Add( new TraverserAction( TraverserActionType.UseObject, (int)itemIndexToUse ) );	
+		}
+
 		[ScriptMethod( "UseItem" )]
 		[ScriptMethodParameter( 0, "script", typeof(Script) )]
 		[ScriptMethodParameter( 1, "indexToUse", typeof(double) )]

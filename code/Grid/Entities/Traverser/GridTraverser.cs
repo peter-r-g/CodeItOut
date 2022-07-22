@@ -110,11 +110,10 @@ public partial class GridTraverser : GridEntity
 		var newGridPosition = GridPosition + Direction.ToPosition();
 		if ( !GridMap.TryGetCellAt( newGridPosition.X, newGridPosition.Y, out var targetCellInfo ) )
 			return ActionResult.Fail();
-		
-		if ( !targetCellInfo.CanMove[Direction.Opposite()] )
-			return ActionResult.Fail();
 
-		return ActionResult.Success( newGridPosition, Direction );
+		return !targetCellInfo.CanMove[Direction.Opposite()]
+			? ActionResult.Fail()
+			: ActionResult.Success( newGridPosition, Direction );
 	}
 
 	protected override ActionResult TurnLeft()
@@ -135,23 +134,16 @@ public partial class GridTraverser : GridEntity
 		return ActionResult.Success( GridPosition, (Direction)newDirection );
 	}
 
-	protected override ActionResult UseObject()
+	protected override ActionResult UseObject( int? itemIndexToUse )
 	{
-		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
-			return ActionResult.Fail();
-
-		foreach ( var obj in cellInfo.GetObjectsInDirection( Direction ) )
-		{
-			if ( obj.Use( this, null, out _ ) )
-				return ActionResult.Success( GridPosition, Direction );
-		}
-
-		return ActionResult.Fail();
+		return !TryUseObject( out _, out _, itemIndexToUse )
+			? ActionResult.Fail()
+			: ActionResult.Success( GridPosition, Direction );
 	}
 
 	protected override ActionResult UseItem( int indexToUse )
 	{
-		return !TryUseItem( indexToUse, out var usedItem, out var itemUsed )
+		return !TryUseItem( indexToUse, out _, out _ )
 			? ActionResult.Fail()
 			: ActionResult.Success( GridPosition, Direction );
 	}
