@@ -113,8 +113,6 @@ public partial class GridMap : Entity
 		Host.AssertServer();
 
 		_gameOver = false;
-		State = MapState.NotStarted;
-
 		Traverser.Reset();
 
 		foreach ( var (startPosition, item) in Items )
@@ -130,6 +128,8 @@ public partial class GridMap : Entity
 
 		foreach ( var cell in CellData )
 			cell.Reset();
+		
+		State = MapState.NotStarted;
 		Event.Run( GridEvent.MapReady.ServerEvent, this );
 		Event.Run( GridEvent.MapReadyEvent, this );
 	}
