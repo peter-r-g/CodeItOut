@@ -123,8 +123,7 @@ public class GridBuilder
 				}
 			}
 		}
-
-		grid.Reset();
+		
 		return grid;
 	}
 }

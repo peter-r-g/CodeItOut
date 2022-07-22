@@ -62,6 +62,7 @@ public partial class Pawn : Player
 	{
 		Host.AssertServer();
 		Map = GridMap.Load( FileSystem.Mounted, $"maps/level{Level}.s&s" );
+		Map.Reset();
 	}
 
 	[GridEvent.MapReady.Server]
