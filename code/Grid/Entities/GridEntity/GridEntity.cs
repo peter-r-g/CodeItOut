@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
@@ -10,7 +9,7 @@ using Sandbox;
 
 namespace CodeItOut.Grid;
 
-public partial class GridEntity : AnimatedEntity
+public abstract partial class GridEntity : AnimatedEntity
 {
 	[Net] public GridMap GridMap { get; set; }
 	[Net] public IntVector2 GridPosition { get; set; }
@@ -126,51 +125,12 @@ public partial class GridEntity : AnimatedEntity
 		return actionResult.ActionState;
 	}
 
-	protected virtual ActionResult MoveForward()
-	{
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
-	}
-
-	protected virtual ActionResult TurnLeft()
-	{
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
-	}
-
-	protected virtual ActionResult TurnRight()
-	{
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
-	}
-
-	protected virtual ActionResult UseObject( int? itemIndexToUse )
-	{
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
-	}
-
-	protected virtual ActionResult UseItem( int indexToUse )
-	{
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
-	}
-
-	protected virtual ActionResult PickupItem( int indexToPlaceIn )
-	{
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
-	}
-
-	protected virtual ActionResult DropItem( int indexToDrop )
-	{
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
-	}
-	
-	protected virtual ActionResult Wait()
-	{
-		return ActionResult.Success( GridPosition, Direction, ArraySegment<GridItem>.Empty,
-			ArraySegment<GridItem>.Empty );
-	}
+	protected abstract ActionResult MoveForward();
+	protected abstract ActionResult TurnLeft();
+	protected abstract ActionResult TurnRight();
+	protected abstract ActionResult UseObject( int? itemIndexToUse );
+	protected abstract ActionResult UseItem( int indexToUse );
+	protected abstract ActionResult PickupItem( int indexToPlaceIn );
+	protected abstract ActionResult DropItem( int indexToDrop );
+	protected abstract ActionResult Wait();
 }
