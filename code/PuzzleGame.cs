@@ -84,12 +84,13 @@ public class PuzzleGame : Game
 
 		foreach ( var action in actions )
 		{
-			map.Traverser.AddAction( action.ActionType,
-				action.ActionArgument is null
-					? ImmutableArray<object>.Empty
-					: ImmutableArray.Create<object>( action.ActionArgument ) );
+			// TODO: Having an object array makes all arguments become JsonElements
+			for ( var i = 0; i < action.ActionArguments.Length; i++ )
+				action.ActionArguments[i] = ((JsonElement)action.ActionArguments[i]).GetInt32();
+			
+			map.Traverser.AddAction( action.ActionType, ImmutableArray.Create( action.ActionArguments ) );	
 		}
-		
+
 		Current._svRunCancelSource = new CancellationTokenSource();
 		_ = map.Run( Current._svRunCancelSource.Token );
 	}
