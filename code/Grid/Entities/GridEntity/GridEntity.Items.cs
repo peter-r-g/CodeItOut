@@ -86,4 +86,25 @@ public partial class GridEntity
 		Items.RemoveAt( indexToDrop );
 		return true;
 	}
+
+	protected bool TryThrowItem( int indexToThrow, int xDelta, int yDelta, [NotNullWhen( true )] out GridItem? item )
+	{
+		item = null;
+		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out _ ) )
+			return false;
+		
+		if ( !GridMap.TryGetCellAt( GridPosition.X + xDelta, GridPosition.Y + yDelta, out var targetCellInfo ) )
+			return false;
+
+		if ( targetCellInfo.GroundItem is not null )
+			return false;
+
+		if ( Items.Count < indexToThrow )
+			return false;
+		
+		item = Items[indexToThrow];
+		item.OnDrop( targetCellInfo );
+		Items.RemoveAt( indexToThrow );
+		return true;
+	}
 }

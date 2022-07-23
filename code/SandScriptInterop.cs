@@ -83,6 +83,18 @@ public static class SandScriptInterop
 			ClActions.Add( new TraverserAction( TraverserActionType.DropItem, (int)indexToDrop ) );
 		}
 
+		[ScriptMethod( "ThrowItem" )]
+		[ScriptMethodParameter( 0, "script", typeof(Script) )]
+		[ScriptMethodParameter( 1, "indexToThrow", typeof(double) )]
+		[ScriptMethodParameter( 2, "xDelta", typeof(double) )]
+		[ScriptMethodParameter( 3, "yDelta", typeof(double) )]
+		[ScriptMethodReturn( typeof(void) )]
+		public static void ThrowItem( Script script, double indexToThrow, double xDelta, double yDelta )
+		{
+			ClActions.Add( new TraverserAction( TraverserActionType.ThrowItem, (int)indexToThrow, (int)xDelta,
+				(int)yDelta ) );
+		}
+
 		[ScriptMethod( "Wait" )]
 		[ScriptMethodParameter( 0, "script", typeof(Script) )]
 		[ScriptMethodReturn( typeof(void) )]

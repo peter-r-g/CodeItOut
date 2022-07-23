@@ -100,6 +100,8 @@ public abstract partial class GridEntity : AnimatedEntity
 			TraverserActionType.UseItem when args.Length == 1 => UseItem( (int)args[0] ),
 			TraverserActionType.PickupItem when args.Length == 1 => PickupItem( (int)args[0] ),
 			TraverserActionType.DropItem when args.Length == 1 => DropItem( (int)args[0] ),
+			TraverserActionType.ThrowItem when args.Length == 3 =>
+				ThrowItem( (int)args[0], (int)args[1], (int)args[2] ),
 			TraverserActionType.Wait => Wait(),
 			_ => throw new ArgumentOutOfRangeException( nameof(action), action, null )
 		};
@@ -132,5 +134,6 @@ public abstract partial class GridEntity : AnimatedEntity
 	protected abstract ActionResult UseItem( int indexToUse );
 	protected abstract ActionResult PickupItem( int indexToPlaceIn );
 	protected abstract ActionResult DropItem( int indexToDrop );
+	protected abstract ActionResult ThrowItem( int indexToThrow, int xDelta, int yDelta );
 	protected abstract ActionResult Wait();
 }

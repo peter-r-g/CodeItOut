@@ -161,6 +161,14 @@ public partial class GridTraverser : GridEntity
 			? ActionResult.Fail()
 			: ActionResult.Success( GridPosition, Direction, null, new[] {droppedItem} );
 	}
+
+	protected override ActionResult ThrowItem( int indexToThrow, int xDelta, int yDelta )
+	{
+		return !TryThrowItem( indexToThrow, xDelta, yDelta, out var thrownItem )
+			? ActionResult.Fail()
+			: ActionResult.Success( GridPosition, Direction, null, new[] {thrownItem} );
+	}
+
 	protected override ActionResult Wait()
 	{
 		return ActionResult.Success( GridPosition, Direction );
