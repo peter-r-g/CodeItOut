@@ -115,7 +115,8 @@ public abstract partial class GridEntity : AnimatedEntity
 			_svTimeSinceMoveStart = 0;
 			await GameTask.DelaySeconds( TravelTime );
 		}
-		else if ( actionResult.Direction != Direction )
+		
+		if ( actionResult.Direction != Direction )
 		{
 			_svPreviousDirection = Direction;
 			Direction = actionResult.Direction;
