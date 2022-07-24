@@ -92,6 +92,7 @@ public partial class GridMap : Entity
 		_gameOver = true;
 		State = MapState.Won;
 		
+		MapWon?.Invoke();
 	}
 
 	private void Lose()
