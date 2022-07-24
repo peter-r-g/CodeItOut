@@ -48,6 +48,8 @@ public partial class GridMap : Entity
 			for ( var y = 0; y < Size.Y; y++ )
 			{
 				var cell = CellData[GetIndexAt( x, y )];
+				if ( cell is null )
+					continue;
 				cell.DebugDraw();
 			}
 		}
