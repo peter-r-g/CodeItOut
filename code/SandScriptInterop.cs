@@ -158,7 +158,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void PlaceFloor( Script script, double x, double y )
 		{
-			MapBuilder.AddObject( (int)x, (int)y, typeof(FloorObject) );
+			MapBuilder.AddObject<FloorObject>( (int)x, (int)y );
 		}
 
 		[ScriptMethod( "PlaceWall" )]
@@ -173,7 +173,7 @@ public static class SandScriptInterop
 			if ( !Enum.TryParse<Direction>( direction, true, out var dir ) )
 				throw new Exception();
 
-			MapBuilder.AddObject( (int)x, (int)y, typeof(WallObject), dir );
+			MapBuilder.AddObject<WallObject>( (int)x, (int)y, dir );
 		}
 
 		[ScriptMethod( "PlaceKey" )]
@@ -183,7 +183,7 @@ public static class SandScriptInterop
 		[ScriptMethodReturn( typeof(void) )]
 		public static void PlaceKey( Script script, double x, double y )
 		{
-			MapBuilder.AddItem( (int)x, (int)y, typeof(KeyItem) );
+			MapBuilder.AddItem<KeyItem>( (int)x, (int)y );
 		}
 
 		[ScriptMethod( "PlaceUnlockedExit" )]
@@ -198,7 +198,7 @@ public static class SandScriptInterop
 			if ( !Enum.TryParse<Direction>( direction, true, out var dir ) )
 				throw new Exception();
 
-			MapBuilder.AddObject( (int)x, (int)y, typeof(DoorObject), dir );
+			MapBuilder.AddObject<DoorObject>( (int)x, (int)y, dir );
 		}
 		
 		[ScriptMethod( "PlaceLockedExit" )]
@@ -213,7 +213,9 @@ public static class SandScriptInterop
 			if ( !Enum.TryParse<Direction>( direction, true, out var dir ) )
 				throw new Exception();
 
-			MapBuilder.AddObject( (int)x, (int)y, typeof(DoorObject), dir );
+			MapBuilder.AddObject<DoorObject>( (int)x, (int)y, dir );
+		}
+
 		}
 	}
 	
