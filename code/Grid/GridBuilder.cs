@@ -64,18 +64,19 @@ public class GridBuilder
 		return this;
 	}
 	
-	public GridBuilder AddItem( int x, int y, Type gridItemType )
 	{
-		_items.Add( (x, y), gridItemType );
+	public GridBuilder AddItem<T>( int x, int y ) where T : GridItem
+	{
+		_items.Add( (x, y), typeof(T) );
 		return this;
 	}
 
-	public GridBuilder AddObject( int x, int y, Type gridObjectType, Direction direction = Direction.None )
+	public GridBuilder AddObject<T>( int x, int y, Direction direction = Direction.None ) where T : GridObject
 	{
 		if ( !_objects.ContainsKey( (x, y) ) )
 			_objects.Add( (x, y), new List<(Type, Direction)>() );
 		
-		_objects[(x, y)].Add( (gridObjectType, direction) );
+		_objects[(x, y)].Add( (typeof(T), direction) );
 		return this;
 	}
 
