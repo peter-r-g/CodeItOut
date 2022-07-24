@@ -210,6 +210,14 @@ public partial class GridMap : Entity
 		Entities.Add( entity );
 	}
 
+	public IEnumerable<T> GetObjectsOfType<T>() where T : GridObject
+	{
+		var objects = new List<T>();
+		foreach ( var cell in CellData )
+			objects.AddRange( cell.Objects.OfType<T>() );
+		return objects;
+	}
+
 	public bool TryGetCellAt( int x, int y, [NotNullWhen( true )] out GridCell? gridCell )
 	{
 		if ( !IsValidPosition( x, y ) )
