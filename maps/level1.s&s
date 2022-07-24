@@ -90,6 +90,9 @@ void BuildMetaInformation()
     SetCellSize( CELL_SIZE_X, CELL_SIZE_Y );
     SetStartPosition( START_POSITION_X, START_POSITION_Y );
     SetItemCap( ITEM_CAP );
+
+    // Objectives.
+    AddLeaveObjective();
 }
 
 /*

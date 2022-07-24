@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
+using CodeItOut.Objective;
 using CodeItOut.Utility;
 using Sandbox;
 using SandScript;
@@ -18,6 +20,7 @@ public partial class GridMap : Entity
 	[Net] public IntVector2 Size { get; set; }
 	[Net] public IntVector2 StartPosition { get; set; }
 	
+	[Net] public IList<BaseObjective> Objectives { get; private set; }
 	[Net] public GridTraverser Traverser { get; private set; }
 	[Net] public IList<GridCell> CellData { get; private set; }
 	[Net] public IDictionary<IntVector2, GridItem> Items { get; private set; }
@@ -62,6 +65,9 @@ public partial class GridMap : Entity
 				cell.DebugDraw();
 			}
 		}
+
+		foreach ( var objective in Objectives )
+			DebugObjective( objective, out _ );
 	}
 
 	public void Cleanup()
@@ -100,6 +106,16 @@ public partial class GridMap : Entity
 
 	public void End()
 	{
+		foreach ( var objective in Objectives )
+		{
+			if ( !objective.IsCompleted() )
+			{
+				Lose();
+				return;
+			}
+		}
+
+		Win();
 	}
 
 	public async Task Run( CancellationToken cancellationToken )
@@ -167,6 +183,12 @@ public partial class GridMap : Entity
 			return false;
 
 		return x <= Size.X - 1 && y <= Size.Y - 1;
+	}
+
+	public void AddObjective( BaseObjective objective )
+	{
+		objective.GridMap = this;
+		Objectives.Add( objective );
 	}
 
 	public void AddItemTo( int x, int y, GridItem item )
@@ -245,6 +267,17 @@ public partial class GridMap : Entity
 	private int GetIndexAt( int x, int y )
 	{
 		return x + Size.X * y;
+	}
+	
+	private void DebugObjective( BaseObjective objective, out int lastLine, int currentLine = -1, int indent = 0 )
+	{
+		lastLine = currentLine + 1;
+		var completed = objective.IsCompleted();
+		DebugOverlay.ScreenText( $"{new string( '\t', indent )}{objective}: {completed}", new Vector2( 10, 100 ),
+			lastLine, completed ? Color.Green : Color.Red, 0.1f );
+
+		foreach ( var childObjective in objective.ChildObjectives )
+			DebugObjective( childObjective, out lastLine, lastLine, indent + 1 );
 	}
 
 	public static GridMap Load( BaseFileSystem fs, string filePath )

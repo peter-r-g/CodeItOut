@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CodeItOut.Grid;
 using CodeItOut.Grid.Traverser;
 using CodeItOut.Items;
+using CodeItOut.Objective;
 using SandScript;
 
 namespace CodeItOut;
@@ -216,6 +217,12 @@ public static class SandScriptInterop
 			MapBuilder.AddObject<DoorObject>( (int)x, (int)y, dir );
 		}
 
+		[ScriptMethod( "AddLeaveObjective" )]
+		[ScriptMethodParameter( 0, "script", typeof(Script) )]
+		[ScriptMethodReturn( typeof(void) )]
+		public static void AddLeaveObjective( Script script )
+		{
+			MapBuilder.AddObjective<LeaveObjective>();
 		}
 	}
 	

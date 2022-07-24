@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeItOut.Items;
+using CodeItOut.Objective;
 using CodeItOut.Utility;
 
 namespace CodeItOut.Grid;
@@ -13,9 +14,10 @@ public class GridBuilder
 	private int _itemCap;
 	private Vector3 _worldPosition;
 
+	private readonly List<Type> _objectives = new();
 	private readonly Dictionary<(int, int), Type> _items = new();
 	private readonly Dictionary<(int, int), List<(Type, Direction)>> _objects = new();
-	
+
 	public GridBuilder WithCellSize( IntVector2 cellSize )
 	{
 		_cellSize = cellSize;
@@ -64,7 +66,12 @@ public class GridBuilder
 		return this;
 	}
 	
+	public GridBuilder AddObjective<T>() where T : BaseObjective
 	{
+		_objectives.Add( typeof(T) );
+		return this;
+	}
+	
 	public GridBuilder AddItem<T>( int x, int y ) where T : GridItem
 	{
 		_items.Add( (x, y), typeof(T) );
@@ -124,7 +131,10 @@ public class GridBuilder
 				}
 			}
 		}
-		
+
+		foreach ( var objectiveType in _objectives )
+			grid.AddObjective( TypeLibrary.Create<BaseObjective>( objectiveType ) );
+
 		return grid;
 	}
 }
