@@ -72,13 +72,9 @@ public partial class Pawn : Player
 		clothing.LoadFromClient( Client );
 		clothing.DressEntity( Map?.Traverser );
 	}
-
-	[GridEvent.MapReady.Server]
-	private void MapReady( GridMap map )
+	
+	private void MapReady()
 	{
-		if ( map != Map )
-			return;
-
 		CameraMode = new LookAtCamera
 		{
 			LerpSpeed = 0,
@@ -86,13 +82,9 @@ public partial class Pawn : Player
 			TargetOffset = new Vector3( 0, 0, 50 )
 		};
 	}
-
-	[GridEvent.MapStart.Server]
-	private void MapStart( GridMap map )
+	
+	private void MapStart()
 	{
-		if ( map != Map )
-			return;
-		
 		CameraMode = new LookAtCamera
 		{
 			LerpSpeed = 0,

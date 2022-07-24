@@ -75,8 +75,6 @@ public partial class GridMap : Entity
 		_gameOver = true;
 		State = MapState.Won;
 		
-		Event.Run( GridEvent.MapWon.ServerEvent, this );
-		Event.Run( GridEvent.MapWonEvent, this );
 	}
 
 	public void Lose()
@@ -86,8 +84,6 @@ public partial class GridMap : Entity
 		_gameOver = true;
 		State = MapState.Lost;
 		
-		Event.Run( GridEvent.MapLost.ServerEvent, this );
-		Event.Run( GridEvent.MapLostEvent, this );
 	}
 
 	public async Task Run( CancellationToken cancellationToken )
@@ -95,9 +91,6 @@ public partial class GridMap : Entity
 		Host.AssertServer();
 		
 		State = MapState.Running;
-		
-		Event.Run( GridEvent.MapStart.ServerEvent, this );
-		Event.Run( GridEvent.MapStartEvent, this );
 		
 		for ( var i = 0; i < Traverser.ActionCount; i++ )
 		{
@@ -148,8 +141,6 @@ public partial class GridMap : Entity
 			cell.Reset();
 		
 		State = MapState.NotStarted;
-		Event.Run( GridEvent.MapReady.ServerEvent, this );
-		Event.Run( GridEvent.MapReadyEvent, this );
 	}
 
 	public bool IsValidPosition( int x, int y )
