@@ -274,7 +274,7 @@ public partial class GridMap : Entity
 	{
 		lastLine = currentLine + 1;
 		var completed = objective.IsCompleted();
-		DebugOverlay.ScreenText( $"{new string( '\t', indent )}{objective}: {completed}", new Vector2( 10, 100 ),
+		DebugOverlay.ScreenText( $"{objective}: {completed}", new Vector2( 10, 100 ),
 			lastLine, completed ? Color.Green : Color.Red, 0.1f );
 
 		foreach ( var childObjective in objective.ChildObjectives )
