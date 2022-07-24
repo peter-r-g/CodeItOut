@@ -10,7 +10,18 @@ namespace CodeItOut.Grid;
 
 public abstract partial class GridEntity : AnimatedEntity
 {
-	[Net] public GridMap GridMap { get; set; }
+	public GridMap? GridMap
+	{
+		get => Map;
+		set
+		{
+			var oldGridMap = Map;
+			Map = value;
+			OnGridMapChanged( oldGridMap, value );
+		}
+	}
+	[Net] private GridMap? Map { get; set; }
+	
 	[Net] public IntVector2 GridPosition { get; set; }
 	[Net] public Direction Direction { get; private set; }
 
@@ -26,6 +37,10 @@ public abstract partial class GridEntity : AnimatedEntity
 	private const float TravelTime = 1f;
 	private IntVector2 _svPreviousGridPosition = new(-1, -1);
 	private TimeSince _svTimeSinceMoveStart;
+	
+	protected virtual void OnGridMapChanged( GridMap? oldGridMap, GridMap? newGridMap )
+	{
+	}
 	
 	[Event.Tick.Server]
 	protected void Tick()

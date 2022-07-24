@@ -23,6 +23,17 @@ public partial class GridTraverser : GridEntity
 		TraverserHud.Instance.Traverser = this;
 	}
 
+	protected override void OnGridMapChanged( GridMap? oldGridMap, GridMap? newGridMap )
+	{
+		base.OnGridMapChanged( oldGridMap, newGridMap );
+
+		if ( oldGridMap is not null )
+			oldGridMap.MapLost -= PlayLoseAnimation;
+
+		if ( newGridMap is not null )
+			newGridMap.MapLost += PlayLoseAnimation;
+	}
+
 	protected override void UpdatePosition()
 	{
 		base.UpdatePosition();

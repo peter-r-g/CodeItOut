@@ -26,6 +26,15 @@ public partial class GridMap : Entity
 	public Vector2 WorldCenter => new(Position.x + WorldWidth / 2, Position.y + WorldHeight / 2);
 	public float WorldWidth => Size.X * CellSize.X;
 	public float WorldHeight => Size.Y * CellSize.Y;
+	
+	public delegate void MapReadyEventHandler();
+	public event MapReadyEventHandler? MapReady;
+	public delegate void MapStartEventHandler();
+	public event MapStartEventHandler? MapStart;
+	public delegate void MapWonEventHandler();
+	public event MapWonEventHandler? MapWon;
+	public delegate void MapLostEventHandler();
+	public event MapLostEventHandler? MapLost;
 
 	private bool _gameOver;
 
@@ -70,7 +79,7 @@ public partial class GridMap : Entity
 		Delete();
 	}
 
-	public void Win()
+	private void Win()
 	{
 		Host.AssertServer();
 		
@@ -79,13 +88,18 @@ public partial class GridMap : Entity
 		
 	}
 
-	public void Lose()
+	private void Lose()
 	{
 		Host.AssertServer();
 		
 		_gameOver = true;
 		State = MapState.Lost;
 		
+		MapLost?.Invoke();
+	}
+
+	public void End()
+	{
 	}
 
 	public async Task Run( CancellationToken cancellationToken )
@@ -93,6 +107,7 @@ public partial class GridMap : Entity
 		Host.AssertServer();
 		
 		State = MapState.Running;
+		MapStart?.Invoke();
 		
 		for ( var i = 0; i < Traverser.ActionCount; i++ )
 		{
@@ -105,7 +120,7 @@ public partial class GridMap : Entity
 			
 			if ( result == ActionState.Failed )
 			{
-				Lose();
+				End();
 				return;
 			}
 
@@ -118,7 +133,7 @@ public partial class GridMap : Entity
 		}
 
 		if ( !_gameOver )
-			Lose();
+			End();
 	}
 
 	public void Reset()
@@ -143,6 +158,7 @@ public partial class GridMap : Entity
 			cell.Reset();
 		
 		State = MapState.NotStarted;
+		MapReady?.Invoke();
 	}
 
 	public bool IsValidPosition( int x, int y )

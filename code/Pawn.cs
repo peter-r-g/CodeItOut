@@ -62,6 +62,19 @@ public partial class Pawn : Player
 			GridMap?.FrameSimulate( cl );
 	}
 	
+	private void OnGridMapChanged( GridMap? oldGridMap, GridMap? newGridMap )
+	{
+		if ( oldGridMap is not null )
+		{
+			oldGridMap.MapReady -= MapReady;
+			oldGridMap.MapStart -= MapStart;
+		}
+
+		if ( newGridMap is not null )
+		{
+			newGridMap.MapReady += MapReady;
+			newGridMap.MapStart += MapStart;
+		}
 	}
 
 	public void NextLevel()
