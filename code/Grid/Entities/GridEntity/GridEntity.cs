@@ -54,6 +54,9 @@ public abstract partial class GridEntity : AnimatedEntity
 	protected virtual void UpdatePosition()
 	{
 		Host.AssertServer();
+
+		if ( GridMap is null )
+			return;
 		
 		var previousPosition = _svPreviousGridPosition;
 		if ( !GridMap.TryGetCellAt( previousPosition.X, previousPosition.Y, out var previousCellInfo ) )

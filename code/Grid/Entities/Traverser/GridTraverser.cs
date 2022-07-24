@@ -37,6 +37,9 @@ public partial class GridTraverser : GridEntity
 	protected override void UpdatePosition()
 	{
 		base.UpdatePosition();
+
+		if ( GridMap is null )
+			return;
 		
 		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
 		{
@@ -108,6 +111,9 @@ public partial class GridTraverser : GridEntity
 
 	protected override ActionResult MoveForward()
 	{
+		if ( GridMap is null )
+			return ActionResult.Fail();
+		
 		if ( !GridMap.TryGetCellAt( GridPosition.X, GridPosition.Y, out var cellInfo ) )
 			return ActionResult.Fail();
 			
