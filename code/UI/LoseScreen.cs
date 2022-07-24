@@ -9,6 +9,6 @@ public class LoseScreen : Panel
 {
 	public LoseScreen()
 	{
-		BindClass( "hidden", () => (Local.Pawn as Pawn)?.Map?.State != MapState.Lost );
+		BindClass( "hidden", () => (Local.Pawn as Pawn)?.GridMap?.State != MapState.Lost );
 	}
 }

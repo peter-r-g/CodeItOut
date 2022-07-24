@@ -9,6 +9,6 @@ public class WinScreen : Panel
 {
 	public WinScreen()
 	{
-		BindClass( "hidden", () => (Local.Pawn as Pawn)?.Map?.State != MapState.Won );
+		BindClass( "hidden", () => (Local.Pawn as Pawn)?.GridMap?.State != MapState.Won );
 	}
 }

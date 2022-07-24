@@ -57,7 +57,7 @@ public class PuzzleGame : Game
 	[ConCmd.Server( "next_level" )]
 	public static void NextLevel()
 	{
-		if ( ConsoleSystem.Caller.Pawn is not Pawn {Map.State: MapState.Won} pawn )
+		if ( ConsoleSystem.Caller.Pawn is not Pawn {GridMap.State: MapState.Won} pawn )
 			return;
 
 		pawn.NextLevel();
@@ -67,14 +67,14 @@ public class PuzzleGame : Game
 	public static void RestartGame()
 	{
 		Current._svRunCancelSource?.Cancel();
-		(ConsoleSystem.Caller.Pawn as Pawn)?.Map?.Reset();
+		(ConsoleSystem.Caller.Pawn as Pawn)?.GridMap?.Reset();
 	}
 	
 	[ConCmd.Server]
 	// TODO: ServerRpc my beloved when :(
 	public static void SubmitSolution( string data )
 	{
-		var map = (ConsoleSystem.Caller.Pawn as Pawn)?.Map;
+		var map = (ConsoleSystem.Caller.Pawn as Pawn)?.GridMap;
 		if ( map is null )
 			return;
 		

@@ -9,6 +9,6 @@ public class PlayScreen : Panel
 {
 	public PlayScreen()
 	{
-		BindClass( "hidden", () => (Local.Pawn as Pawn)?.Map?.State != MapState.NotStarted );
+		BindClass( "hidden", () => (Local.Pawn as Pawn)?.GridMap?.State != MapState.NotStarted );
 	}
 }

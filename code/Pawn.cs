@@ -9,7 +9,17 @@ public partial class Pawn : Player
 	public static bool GridDebugEnabled { get; set; }
 	
 	[Net] public int Level { get; private set; }
-	[Net] public GridMap? Map { get; private set; }
+	public GridMap? GridMap
+	{
+		get => Map;
+		set
+		{
+			var oldGridMap = Map;
+			Map = value;
+			OnGridMapChanged( oldGridMap, value );
+		}
+	}
+	[Net] private GridMap? Map { get; set; }
 
 	public override void Spawn()
 	{
@@ -19,7 +29,7 @@ public partial class Pawn : Player
 		CameraMode = new LookAtCamera
 		{
 			LerpSpeed = 0,
-			TargetEntity = Map?.Traverser,
+			TargetEntity = GridMap?.Traverser,
 			TargetOffset = new Vector3( 0, 0, 50 )
 		};
 		Controller = null;
@@ -29,27 +39,29 @@ public partial class Pawn : Player
 	public override void Simulate( Client cl )
 	{
 		base.Simulate( cl );
-		if ( Map is null )
+		if ( GridMap is null )
 			return;
 		
-		Map.Simulate( cl );
+		GridMap.Simulate( cl );
 		
 		if ( CameraMode is LookAtCamera camera )
-			camera.Origin = Map.Traverser.Position + new Vector3( 0, -150, 150 );
+			camera.Origin = GridMap.Traverser.Position + new Vector3( 0, -150, 150 );
 	}
 
 	public override void FrameSimulate( Client cl )
 	{
 		base.FrameSimulate( cl );
 
-		if ( Map is not null )
+		if ( GridMap is not null )
 		{
-			if ( Map.State == MapState.Running && CameraMode is LookAtCamera camera )
-				camera.Origin = Map.Traverser.Position + new Vector3( 0, -150, 150 );
+			if ( GridMap.State == MapState.Running && CameraMode is LookAtCamera camera )
+				camera.Origin = GridMap.Traverser.Position + new Vector3( 0, -150, 150 );
 		}
 
 		if ( GridDebugEnabled )
-			Map?.FrameSimulate( cl );
+			GridMap?.FrameSimulate( cl );
+	}
+	
 	}
 
 	public void NextLevel()
@@ -57,7 +69,7 @@ public partial class Pawn : Player
 		Host.AssertServer();
 		
 		Level++;
-		Map?.Cleanup();
+		GridMap?.Cleanup();
 		LoadCurrentLevel();
 	}
 
@@ -65,12 +77,12 @@ public partial class Pawn : Player
 	{
 		Host.AssertServer();
 		
-		Map = GridMap.Load( FileSystem.Mounted, $"maps/level{Level}.s&s" );
-		Map.Reset();
+		GridMap = GridMap.Load( FileSystem.Mounted, $"maps/level{Level}.s&s" );
+		GridMap.Reset();
 		
 		var clothing = new ClothingContainer();
 		clothing.LoadFromClient( Client );
-		clothing.DressEntity( Map?.Traverser );
+		clothing.DressEntity( GridMap.Traverser );
 	}
 	
 	private void MapReady()
@@ -78,7 +90,7 @@ public partial class Pawn : Player
 		CameraMode = new LookAtCamera
 		{
 			LerpSpeed = 0,
-			TargetEntity = map.Traverser,
+			TargetEntity = GridMap!.Traverser,
 			TargetOffset = new Vector3( 0, 0, 50 )
 		};
 	}
@@ -88,7 +100,7 @@ public partial class Pawn : Player
 		CameraMode = new LookAtCamera
 		{
 			LerpSpeed = 0,
-			TargetEntity = map.Traverser,
+			TargetEntity = GridMap!.Traverser,
 			TargetOffset = new Vector3( 0, 0, 50 )
 		};
 	}
